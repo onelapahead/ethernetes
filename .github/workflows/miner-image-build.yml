@@ -17,6 +17,7 @@ jobs:
     runs-on: ubuntu-18.04
     name: Build
     outputs:
+      git-tag: ${{ steps.versions.outputs.git-tag }}
       version: ${{ steps.versions.outputs.version }}
       dirty-version: ${{ steps.versions.outputs.dirty-version }}
     steps:
