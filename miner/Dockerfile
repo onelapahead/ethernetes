@@ -20,11 +20,14 @@ FROM base as final
 
 COPY --from=ethminer /usr/local/bin/ethminer /usr/local/bin/ethminer
 
-ENV GPU_FORCE_64BIT_PTR=0
-ENV GPU_MAX_HEAP_SIZE=100
-ENV GPU_USE_SYNC_OBJECTS=1
-ENV GPU_MAX_ALLOC_PERCENT=100
-ENV GPU_SINGLE_ALLOC_PERCENT=100
+ENV GPU_FORCE_64BIT_PTR=0 \
+    GPU_MAX_HEAP_SIZE=100 \
+    GPU_USE_SYNC_OBJECTS=1 \
+    GPU_MAX_ALLOC_PERCENT=100 \GPU_SINGLE_ALLOC_PERCENT=100 \
+    WALLET_ADDRESS=0xf0bEA86827AE84B7a712a4Bc716a15C465be3878 \
+    MINE_POOL=us1.ethermine.org \
+    STRATUM_TLS_PORT=5555 \
+    WORKER_ID=rdu-01a
 
-ENTRYPOINT ["/usr/local/bin/ethminer"]
-CMD ["--help"]
+ENTRYPOINT ["sh", "-c"]
+CMD ["ethminer -U -P stratum+tls12://${WALLET_ADDRESS}.${WORKER_ID}@${MINE_POOL}:${STRATUM_TLS_PORT} --report-hashrate"]
