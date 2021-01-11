@@ -1,2 +1,60 @@
+name: "Miner Image / CI"
 on:
-  pull-request:
+  pull_request:
+    branches:
+      - '**'
+    paths:
+      - 'miner/*'
+      - .github/workflows/miner-image.build.yml
+  push:
+    branches:
+      - '*' # TODO change to main
+    paths:
+      - 'miner/*'
+      - .github/workflows/miner-image.build.yml
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    name: Build
+    outputs:
+      version: ${{ steps.versions.outputs.version }}
+      dirty-version: ${{ steps.versions.outputs.dirty-version }}
+    steps:
+      - name: git checkout
+        uses: actions/checkout@v2
+
+      - name: extract versions
+        id: versions
+        run: |
+          version=$(cat VERSION)
+          echo "::set-output name=version::v${version}"
+          echo "::set-output name=dirty-version::v${version}-$(git rev-parse --short HEAD)"
+        working-directory: miner
+
+      - name: docker login
+        uses: azure/docker-login@v1
+        with:
+          login-server: ghcr.io
+          username: hfuss
+          password: ${{ secrets.PACKAGES_TOKEN }}
+
+      - name: build and test
+        run: |
+          docker build . -t ghcr.io/hfuss/miner:${{ steps.versions.outputs.dirty-version }}
+          docker run -it ghcr.io/hfuss/miner:${{ steps.versions.outputs.dirty-version }} ethminer --help
+          docker push ghcr.io/hfuss/miner:${{ steps.versions.outputs.dirty-version }}
+        working-directory: miner
+
+  release:
+    name: Release
+    needs: build
+    runs-on: ubuntu-18.04
+    steps:
+      - name: git checkout
+        uses: actions/checkout@v2
+
+      - uses: dangoslen/changelog-enforcer@v2
+        with:
+          changeLogPath: 'miner/CHANGELOG.md'
+          skipLabels: 'Skip-Changelog'
+          expectedLatestVersion: ${{ needs.build.outputs.version }}
