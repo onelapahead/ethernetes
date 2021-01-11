@@ -1,4 +1,4 @@
-name: "Miner Image / CI"
+name: "Miner Image"
 on:
   pull_request:
     branches:
@@ -13,13 +13,9 @@ on:
       - 'miner/*'
       - .github/workflows/miner-image-build.yml
 jobs:
-  build:
+  ci:
     runs-on: ubuntu-18.04
-    name: Build
-    outputs:
-      git-tag: ${{ steps.versions.outputs.git-tag }}
-      version: ${{ steps.versions.outputs.version }}
-      dirty-version: ${{ steps.versions.outputs.dirty-version }}
+    name: CI
     steps:
       - name: git checkout
         uses: actions/checkout@v2
@@ -47,50 +43,34 @@ jobs:
           docker push ghcr.io/hfuss/miner:${{ steps.versions.outputs.dirty-version }}
         working-directory: miner
 
-  release:
-    name: Release
-    needs: build
-    runs-on: ubuntu-18.04
-    steps:
-      - name: git checkout
-        uses: actions/checkout@v2
-
       - name: enforce new version
         run: |
-          ! git rev-parse ${{ needs.build.outputs.git-tag }}
+          ! git rev-parse ${{ steps.versions.outputs.git-tag }}
 
       - name: enforce changelog
         uses: dangoslen/changelog-enforcer@v2
         with:
           changeLogPath: 'miner/CHANGELOG.md'
           skipLabels: 'Skip-Changelog'
-          expectedLatestVersion: ${{ needs.build.outputs.version }}
+          expectedLatestVersion: ${{ steps.versions.outputs.version }}
 
       - name: extract changelog
         id: changelog
         uses: mindsers/changelog-reader-action@v2
         with:
           validation_depth: 10
-          version: ${{ needs.Build.outputs.version }}
+          version: ${{ steps.versions.outputs.version }}
           path: miner/CHANGELOG.md
-
-      - name: docker login
-        if: ${{ github.event == 'push' }}
-        uses: azure/docker-login@v1
-        with:
-          login-server: ghcr.io
-          username: hfuss
-          password: ${{ secrets.PACKAGES_TOKEN }}
 
       - name: tag images
         run: |
-          docker tag ghcr.io/hfuss/miner:${{ needs.build.outputs.dirty-version }} ghcr.io/hfuss/miner:${{ needs.build.outputs.version }}
-          docker tag ghcr.io/hfuss/miner:${{ needs.build.outputs.dirty-version }} ghcr.io/hfuss/miner:latest
+          docker tag ghcr.io/hfuss/miner:${{ steps.versions.outputs.dirty-version }} ghcr.io/hfuss/miner:${{ steps.versions.outputs.version }}
+          docker tag ghcr.io/hfuss/miner:${{ steps.versions.outputs.dirty-version }} ghcr.io/hfuss/miner:latest
 
       - name: promote images
         if: ${{ github.event == 'push' }}
         run: |
-          docker push ghcr.io/hfuss/miner:${{ needs.build.outputs.version }}
+          docker push ghcr.io/hfuss/miner:${{ steps.versions.outputs.version }}
           docker push ghcr.io/hfuss/miner:latest
 
       - name: git release
@@ -98,8 +78,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
-          tag_name: ${{ needs.build.outputs.git-tag }}
-          release_name: Miner Image ${{ needs.build.outputs.version }} Release
+          tag_name: ${{ steps.versions.outputs.git-tag }}
+          release_name: Miner Image ${{ steps.versions.outputs.version }} Release
           body: ${{ steps.changelog.outputs.changes }}
           draft: ${{ github.event != 'push' }}
           prerelease: true
