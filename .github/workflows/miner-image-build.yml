@@ -78,7 +78,9 @@ jobs:
         if: ${{ github.event == 'push' }}
         run: |
           docker tag ghcr.io/hfuss/miner:${{ needs.build.outputs.dirty-version }} ghcr.io/hfuss/miner:${{ needs.build.outputs.version }}
+          docker tag ghcr.io/hfuss/miner:${{ needs.build.outputs.dirty-version }} ghcr.io/hfuss/miner:latest
           docker push ghcr.io/hfuss/miner:${{ needs.build.outputs.version }}
+          docker push ghcr.io/hfuss/miner:latest
 
       - name: extract changelog
         id: changelog_reader
