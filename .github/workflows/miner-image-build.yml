@@ -66,6 +66,14 @@ jobs:
           skipLabels: 'Skip-Changelog'
           expectedLatestVersion: ${{ needs.build.outputs.version }}
 
+      - name: extract changelog
+        id: changelog
+        uses: mindsers/changelog-reader-action@v2
+        with:
+          validation_depth: 10
+          version: ${{ needs.Build.outputs.version }}
+          path: miner/CHANGELOG.md
+
       - name: docker login
         if: ${{ github.event == 'push' }}
         uses: azure/docker-login@v1
@@ -74,31 +82,24 @@ jobs:
           username: hfuss
           password: ${{ secrets.PACKAGES_TOKEN }}
 
-      - name: promote images
-        if: ${{ github.event == 'push' }}
+      - name: tag images
         run: |
           docker tag ghcr.io/hfuss/miner:${{ needs.build.outputs.dirty-version }} ghcr.io/hfuss/miner:${{ needs.build.outputs.version }}
           docker tag ghcr.io/hfuss/miner:${{ needs.build.outputs.dirty-version }} ghcr.io/hfuss/miner:latest
+
+      - name: promote images
+        if: ${{ github.event == 'push' }}
+        run: |
           docker push ghcr.io/hfuss/miner:${{ needs.build.outputs.version }}
           docker push ghcr.io/hfuss/miner:latest
 
-      - name: extract changelog
-        id: changelog_reader
-        if: ${{ github.event == 'push' }}
-        uses: mindsers/changelog-reader-action@v2
-        with:
-          validation_depth: 10
-          version: ${{ needs.Build.outputs.version }}
-          path: miner/CHANGELOG.md
-
       - name: git release
-        if: ${{ github.event == 'push' }}
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
           tag_name: ${{ needs.build.outputs.git-tag }}
-          release_name: Miner Image Release ${{ needs.build.outputs.git-tag }}
-          body: ${{ steps.changelog_reader.outputs.changes }}
-          draft: false
+          release_name: Miner Image ${{ needs.build.outputs.version }} Release
+          body: ${{ steps.changelog.outputs.changes }}
+          draft: ${{ github.event != 'push' }}
           prerelease: true
