@@ -8,7 +8,7 @@ on:
       - .github/workflows/miner-image-build.yml
   push:
     branches:
-      - '*' # TODO change to main
+      - main
     paths:
       - 'miner/*'
       - .github/workflows/miner-image-build.yml
@@ -27,6 +27,7 @@ jobs:
         id: versions
         run: |
           version=$(cat VERSION)
+          echo "::set-output name=git-tag=miner-v${version}"
           echo "::set-output name=version::v${version}"
           echo "::set-output name=dirty-version::v${version}-$(git rev-parse --short HEAD)"
         working-directory: miner
@@ -53,8 +54,48 @@ jobs:
       - name: git checkout
         uses: actions/checkout@v2
 
-      - uses: dangoslen/changelog-enforcer@v2
+      - name: enforce new version
+        run: |
+          ! git rev-parse ${{ needs.build.outputs.git-tag }}
+
+      - name: enforce changelog
+        uses: dangoslen/changelog-enforcer@v2
         with:
           changeLogPath: 'miner/CHANGELOG.md'
           skipLabels: 'Skip-Changelog'
           expectedLatestVersion: ${{ needs.build.outputs.version }}
+
+      - name: docker login
+        if: ${{ github.event == 'push' }}
+        uses: azure/docker-login@v1
+        with:
+          login-server: ghcr.io
+          username: hfuss
+          password: ${{ secrets.PACKAGES_TOKEN }}
+
+      - name: promote images
+        if: ${{ github.event == 'push' }}
+        run: |
+          docker tag ghcr.io/hfuss/miner:${{ needs.build.outputs.dirty-version }} ghcr.io/hfuss/miner:${{ needs.build.outputs.version }}
+          docker push ghcr.io/hfuss/miner:${{ needs.build.outputs.version }}
+
+      - name: extract changelog
+        id: changelog_reader
+        if: ${{ github.event == 'push' }}
+        uses: mindsers/changelog-reader-action@v2
+        with:
+          validation_depth: 10
+          version: ${{ needs.Build.outputs.version }}
+          path: miner/CHANGELOG.md
+
+      - name: git release
+        if: ${{ github.event == 'push' }}
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ needs.build.outputs.git-tag }}
+          release_name: Miner Image Release ${{ needs.build.outputs.git-tag }}
+          body: ${{ steps.changelog_reader.outputs.changes }}
+          draft: false
+          prerelease: true
