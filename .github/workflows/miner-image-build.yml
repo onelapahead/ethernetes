@@ -48,6 +48,7 @@ jobs:
           ! git rev-parse ${{ steps.versions.outputs.git-tag }}
 
       - name: enforce changelog
+        if: ${{ github.event == 'pull_request' }}
         uses: dangoslen/changelog-enforcer@v2
         with:
           changeLogPath: 'miner/CHANGELOG.md'
