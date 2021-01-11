@@ -28,7 +28,7 @@ jobs:
         id: versions
         run: |
           version=$(cat VERSION)
-          echo "::set-output name=git-tag=miner-v${version}"
+          echo "::set-output name=git-tag::miner-v${version}"
           echo "::set-output name=version::v${version}"
           echo "::set-output name=dirty-version::v${version}-$(git rev-parse --short HEAD)"
         working-directory: miner
