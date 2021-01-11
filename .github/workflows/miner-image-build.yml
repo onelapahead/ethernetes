@@ -45,10 +45,14 @@ jobs:
 
       - name: enforce new version
         run: |
-          ! git rev-parse ${{ steps.versions.outputs.git-tag }}
+          git ls-remote --exit-code origin --tags '${{ steps.versions.outputs.git-tag }}' && found=true
+          if [[ "${found}" == "true" ]]; then
+            echo "${{ steps.versions.outputs.git-tag }} tag already exists, please update the version and changelog"
+            exit 1
+          fi
 
       - name: enforce changelog
-        if: ${{ github.event == 'pull_request' }}
+        if: ${{ github.event_name == 'pull_request' }}
         uses: dangoslen/changelog-enforcer@v2
         with:
           changeLogPath: 'miner/CHANGELOG.md'
@@ -69,7 +73,7 @@ jobs:
           docker tag ghcr.io/hfuss/miner:${{ steps.versions.outputs.dirty-version }} ghcr.io/hfuss/miner:latest
 
       - name: promote images
-        if: ${{ github.event == 'push' }}
+        if: ${{ github.event_name == 'push' }}
         run: |
           docker push ghcr.io/hfuss/miner:${{ steps.versions.outputs.version }}
           docker push ghcr.io/hfuss/miner:latest
@@ -82,5 +86,5 @@ jobs:
           tag_name: ${{ steps.versions.outputs.git-tag }}
           release_name: Miner Image ${{ steps.versions.outputs.version }} Release
           body: ${{ steps.changelog.outputs.changes }}
-          draft: ${{ github.event != 'push' }}
+          draft: ${{ github.event_name != 'push' }}
           prerelease: true
