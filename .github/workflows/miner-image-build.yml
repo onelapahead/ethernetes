@@ -5,13 +5,13 @@ on:
       - '**'
     paths:
       - 'miner/*'
-      - .github/workflows/miner-image.build.yml
+      - .github/workflows/miner-image-build.yml
   push:
     branches:
       - '*' # TODO change to main
     paths:
       - 'miner/*'
-      - .github/workflows/miner-image.build.yml
+      - .github/workflows/miner-image-build.yml
 jobs:
   build:
     runs-on: ubuntu-18.04
