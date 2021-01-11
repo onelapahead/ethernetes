@@ -19,6 +19,7 @@ Inspired from [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ### Added
 - Miner image pre-release
 - Miner configured with wallet and mining pool
+- Initial workflow implementation
 
 ### Dependencies
 - Base image `docker.io/nvidia/cuda:11.1-devel-ubuntu18.04`
