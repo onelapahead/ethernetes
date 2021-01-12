@@ -17,7 +17,7 @@ Inspired from [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 
 ## [v0.1.0]
 ### Added
-- Miner image pre-release
+- Miner pre-release
 - Miner configured with wallet and mining pool
 - Initial workflow implementation
 

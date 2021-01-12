@@ -1,17 +1,17 @@
-name: "Miner Image"
+name: "Miner"
 on:
   pull_request:
     branches:
       - '**'
     paths:
       - 'miner/*'
-      - .github/workflows/miner-image-build.yml
+      - .github/workflows/miner-build.yml
   push:
     branches:
       - main
     paths:
       - 'miner/*'
-      - .github/workflows/miner-image-build.yml
+      - .github/workflows/miner-build.yml
 jobs:
   ci:
     runs-on: ubuntu-18.04
@@ -84,7 +84,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
           tag_name: ${{ steps.versions.outputs.git-tag }}
-          release_name: Miner Image ${{ steps.versions.outputs.version }} Release
+          release_name: Miner ${{ steps.versions.outputs.version }} Release
           body: ${{ steps.changelog.outputs.changes }}
           draft: ${{ github.event_name != 'push' }}
           prerelease: true

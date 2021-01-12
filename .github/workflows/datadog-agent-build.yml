@@ -1,0 +1,90 @@
+name: "DataDog Agent"
+on:
+  pull_request:
+    branches:
+      - '**'
+    paths:
+      - 'datadog-agent/*'
+      - .github/workflows/datadog-agent-build.yml
+  push:
+    branches:
+      - main
+    paths:
+      - 'datadog-agent/*'
+      - .github/workflows/datadog-agent-build.yml
+jobs:
+  ci:
+    runs-on: ubuntu-18.04
+    name: CI
+    steps:
+      - name: git checkout
+        uses: actions/checkout@v2
+
+      - name: extract versions
+        id: versions
+        run: |
+          version=$(cat VERSION)
+          echo "::set-output name=git-tag::datadog-agent-v${version}"
+          echo "::set-output name=version::v${version}"
+          echo "::set-output name=dirty-version::v${version}-$(git rev-parse --short HEAD)"
+        working-directory: datadog-agent
+
+      - name: docker login
+        uses: azure/docker-login@v1
+        with:
+          login-server: ghcr.io
+          username: hfuss
+          password: ${{ secrets.PACKAGES_TOKEN }}
+
+      - name: build and test
+        run: |
+          docker build . -t ghcr.io/hfuss/datadog-agent:${{ steps.versions.outputs.dirty-version }}
+          docker run -i ghcr.io/hfuss/datadog-agent:${{ steps.versions.outputs.dirty-version }} 'ethdatadog-agent --help'
+          docker push ghcr.io/hfuss/datadog-agent:${{ steps.versions.outputs.dirty-version }}
+        working-directory: datadog-agent
+
+      - name: enforce new version
+        run: |
+          git ls-remote --exit-code origin --tags '${{ steps.versions.outputs.git-tag }}' && found=true
+          if [[ "${found}" == "true" ]]; then
+            echo "${{ steps.versions.outputs.git-tag }} tag already exists, please update the version and changelog"
+            exit 1
+          fi
+
+      - name: enforce changelog
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: dangoslen/changelog-enforcer@v2
+        with:
+          changeLogPath: 'datadog-agent/CHANGELOG.md'
+          skipLabels: 'Skip-Changelog'
+          expectedLatestVersion: ${{ steps.versions.outputs.version }}
+
+      - name: extract changelog
+        id: changelog
+        uses: mindsers/changelog-reader-action@v2
+        with:
+          validation_depth: 10
+          version: ${{ steps.versions.outputs.version }}
+          path: datadog-agent/CHANGELOG.md
+
+      - name: tag images
+        run: |
+          docker tag ghcr.io/hfuss/datadog-agent:${{ steps.versions.outputs.dirty-version }} ghcr.io/hfuss/datadog-agent:${{ steps.versions.outputs.version }}
+          docker tag ghcr.io/hfuss/datadog-agent:${{ steps.versions.outputs.dirty-version }} ghcr.io/hfuss/datadog-agent:latest
+
+      - name: promote images
+        if: ${{ github.event_name == 'push' }}
+        run: |
+          docker push ghcr.io/hfuss/datadog-agent:${{ steps.versions.outputs.version }}
+          docker push ghcr.io/hfuss/datadog-agent:latest
+
+      - name: git release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ steps.versions.outputs.git-tag }}
+          release_name: DataDog Agent ${{ steps.versions.outputs.version }} Release
+          body: ${{ steps.changelog.outputs.changes }}
+          draft: ${{ github.event_name != 'push' }}
+          prerelease: true
