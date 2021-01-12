@@ -16,7 +16,7 @@ Learning more about crypto, trading, and deep learning with GPUs and K8s.
 
 ```bash
 docker login ghcr.io
-nvidia-docker run --restart=always --detach=true --gpus=0 --name=ethminer ghcr.io/hfuss/miner:v0.1.0
+nvidia-docker run --restart=always --detach=true --gpus=0 --name=ethminer ghcr.io/hfuss/miner:latest
 ```
 
 ### Logs
@@ -28,5 +28,15 @@ docker logs ethminer
 ### GPU Stats
 
 ```bash
-nvidia-smi -q -d TEMPERATURE -i 0 -l 10
+nvidia-docker run -d --gpus=all \
+  --restart always \
+  --name datadog-agent \
+  -v /var/run/docker.sock:/var/run/docker.sock:ro \
+  -v /proc/:/host/proc/:ro \
+  -v /sys/fs/cgroup/:/host/sys/fs/cgroup:ro \
+  -v /opt/datadog-agent-conf.d:/conf.d:ro \
+  -v /opt/datadog-agent-checks.d:/checks.d:ro \
+  -e DD_API_KEY=${DD_API_KEY} \
+  -e DD_SITE=datadoghq.com \
+  ghcr.io/hfuss/datadog-agent:latest
 ```
