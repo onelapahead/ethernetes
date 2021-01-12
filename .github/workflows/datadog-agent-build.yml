@@ -39,7 +39,6 @@ jobs:
       - name: build and test
         run: |
           docker build . -t ghcr.io/hfuss/datadog-agent:${{ steps.versions.outputs.dirty-version }}
-          docker run -i ghcr.io/hfuss/datadog-agent:${{ steps.versions.outputs.dirty-version }} 'ethdatadog-agent --help'
           docker push ghcr.io/hfuss/datadog-agent:${{ steps.versions.outputs.dirty-version }}
         working-directory: datadog-agent
 
