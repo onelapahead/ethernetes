@@ -48,7 +48,7 @@
               "type": "query_value",
               "requests": [
                 {
-                  "q": "sum:docker.containers.running{$host,image_name:ghcr.io/hfuss/miner}*100",
+                  "q": "avg:docker.containers.running{$host,image_name:ghcr.io/hfuss/miner}*100",
                   "aggregator": "avg",
                   "conditional_formats": [
                     {
