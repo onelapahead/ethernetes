@@ -16,7 +16,7 @@ Learning more about crypto, trading, and deep learning with GPUs and K8s.
 
 ```bash
 docker login ghcr.io
-nvidia-docker run --restart=always --detach=true --gpus=0 --name=ethminer ghcr.io/hfuss/miner:latest
+nvidia-docker run -p 127.0.0.1:3333:3333/tcp --restart=always --detach=true --gpus=0 --name=ethminer ghcr.io/hfuss/miner:latest
 ```
 
 ### Logs

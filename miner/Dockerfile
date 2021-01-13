@@ -10,7 +10,7 @@ RUN mkdir /ethminer
 WORKDIR /ethminer
 
 RUN apt-get install -y curl \
-    && curl -sL -o ethminer.tgz https://github.com/ethereum-mining/ethminer/releases/download/v0.18.0/ethminer-0.18.0-cuda-9-linux-x86_64.tar.gz \
+    && curl -sL -o ethminer.tgz https://github.com/ethereum-mining/ethminer/releases/download/v0.19.0-alpha.0/ethminer-0.19.0-alpha.0-cuda-8-linux-x86_64.tar.gz \
     && tar -xzvf ethminer.tgz \
     && mv bin/ethminer /usr/local/bin/ \
     && mkdir /usr/local/bin/kernels \
@@ -30,7 +30,9 @@ ENV GPU_FORCE_64BIT_PTR=0 \
     WALLET_ADDRESS=0xf0bEA86827AE84B7a712a4Bc716a15C465be3878 \
     MINE_POOL=us1.ethermine.org \
     STRATUM_TLS_PORT=5555 \
+    API_PORT=3333 \
     WORKER_ID=rdu-01a
 
 ENTRYPOINT ["sh", "-c"]
-CMD ["ethminer -U -P stratum+tls12://${WALLET_ADDRESS}.${WORKER_ID}@${MINE_POOL}:${STRATUM_TLS_PORT} --report-hashrate"]
+CMD ["ethminer -U -P stratum+tls12://${WALLET_ADDRESS}.${WORKER_ID}@${MINE_POOL}:${STRATUM_TLS_PORT} --report-hashrate --api-bind 0.0.0.0:${API_PORT}"]
+EXPOSE ${API_PORT}/tcp
