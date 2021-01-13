@@ -80,11 +80,12 @@ jobs:
 
       - name: git release
         uses: actions/create-release@v1
+        if: ${{ github.event_name != 'push' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
         with:
           tag_name: ${{ steps.versions.outputs.git-tag }}
           release_name: Miner ${{ steps.versions.outputs.version }} Release
           body: ${{ steps.changelog.outputs.changes }}
-          draft: ${{ github.event_name != 'push' }}
-          prerelease: true
+          draft: false
+          prerelease: false
