@@ -11,24 +11,36 @@ Learning more about crypto, trading, and deep learning with GPUs and K8s.
 - [CUDA drivers](https://askubuntu.com/questions/1099015/how-to-install-latest-version-of-cuda-on-ubuntu-18-04)
 - [nvidia-docker2](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#setting-up-nvidia-container-toolkit)
 
+### Docker
+
+```bash
+sudo docker login ghcr.io
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+```
+
 ### Mining
 
-
 ```bash
-docker login ghcr.io
-nvidia-docker run --restart=always --detach=true --gpus=0 --name=ethminer ghcr.io/hfuss/miner:latest
+sudo nvidia-docker run -p 127.0.0.1:3333:3333/tcp --restart=always --detach=true --gpus=0 --name=ethminer ghcr.io/hfuss/miner:latest
 ```
 
-### Logs
+To test the API server:
 
 ```bash
-docker logs ethminer
+echo '{"id":0,"jsonrpc":"2.0","method":"miner_ping"}' | netcat 127.0.0.1 3333
 ```
 
-### GPU Stats
+### Real-Time Logs
 
 ```bash
-nvidia-docker run -d --gpus=all \
+sudo docker logs ethminer --follow --since 10s
+```
+
+### Monitoring via DataDog
+
+```bash
+sudo nvidia-docker run -d --gpus=all \
   --restart always \
   --name datadog-agent \
   -v /var/run/docker.sock:/var/run/docker.sock:ro \

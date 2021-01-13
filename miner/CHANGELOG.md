@@ -15,6 +15,16 @@ Inspired from [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ### Dependencies
 - ...
 
+## [v0.2.0]
+### Added
+- `API_PORT` env var for configuring the API server port
+
+### Changed
+- Enabling API server
+
+### Dependecies
+- Bump `https://github.com/ethereum-mining/ethminer` to `v0.19.0`
+
 ## [v0.1.0]
 ### Added
 - Miner pre-release
