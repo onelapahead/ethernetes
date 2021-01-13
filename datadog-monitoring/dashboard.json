@@ -1,0 +1,381 @@
+{
+  "title": "Ethereum Miners",
+  "description": "",
+  "widgets": [
+    {
+      "id": 6108504807217558,
+      "definition": {
+        "title": "Miner Uptime",
+        "type": "group",
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 4282084101506516,
+            "definition": {
+              "title": "Is Miner Running?",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "min:docker.containers.running{image_name:ghcr.io/hfuss/miner,$host} by {host}",
+                  "on_right_yaxis": false,
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "area"
+                }
+              ],
+              "yaxis": {
+                "scale": "linear",
+                "label": "",
+                "include_zero": true,
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            }
+          },
+          {
+            "id": 983337016343540,
+            "definition": {
+              "title": "Did Miners Have 99.9% Uptime?",
+              "title_size": "16",
+              "title_align": "left",
+              "type": "query_value",
+              "requests": [
+                {
+                  "q": "sum:docker.containers.running{$host,image_name:ghcr.io/hfuss/miner}*100",
+                  "aggregator": "avg",
+                  "conditional_formats": [
+                    {
+                      "hide_value": true,
+                      "custom_fg_color": "#eb0a0a",
+                      "comparator": "<",
+                      "palette": "white_on_red",
+                      "value": 99.9
+                    },
+                    {
+                      "comparator": ">=",
+                      "palette": "white_on_green",
+                      "value": 99.9
+                    }
+                  ]
+                }
+              ],
+              "autoscale": false,
+              "custom_unit": "%",
+              "precision": 2
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": 3861814740897266,
+      "definition": {
+        "title": "GPU Health",
+        "type": "group",
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 6769235197296414,
+            "definition": {
+              "title": "GPU Temperature",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "avg:nvml.temp.{$host,$gpu_device} by {host,name}",
+                  "on_right_yaxis": false,
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "area"
+                }
+              ],
+              "yaxis": {
+                "scale": "linear",
+                "label": "",
+                "include_zero": true,
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": [
+                {
+                  "label": " Critical ",
+                  "value": "y = 80",
+                  "display_type": "error dashed"
+                },
+                {
+                  "label": " Danger ",
+                  "value": "y = 70",
+                  "display_type": "warning dashed"
+                }
+              ]
+            }
+          },
+          {
+            "id": 2343874335617114,
+            "definition": {
+              "title": "GPU Power Usage",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "avg:nvml.power.{$host,$gpu_device} by {host,name}",
+                  "on_right_yaxis": false,
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "area"
+                }
+              ],
+              "yaxis": {
+                "scale": "linear",
+                "label": "",
+                "include_zero": true,
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": [
+                {
+                  "label": " Danger ",
+                  "value": "y = 150",
+                  "display_type": "warning dashed"
+                },
+                {
+                  "label": " Critical ",
+                  "value": "y = 180",
+                  "display_type": "error dashed"
+                }
+              ]
+            }
+          },
+          {
+            "id": 8321659519762666,
+            "definition": {
+              "title": "GPU Fan Speed",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "avg:nvml.fan.{$host,$gpu_device} by {host,name}",
+                  "on_right_yaxis": false,
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "area"
+                }
+              ],
+              "yaxis": {
+                "scale": "linear",
+                "label": "",
+                "include_zero": true,
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            }
+          },
+          {
+            "id": 6013706490307306,
+            "definition": {
+              "title": "GPU Memory Utilization",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "avg:nvml.util.memory{$host,$gpu_device} by {host,name}",
+                  "on_right_yaxis": false,
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "area"
+                }
+              ],
+              "yaxis": {
+                "scale": "linear",
+                "label": "",
+                "include_zero": true,
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            }
+          }
+        ]
+      }
+    },
+    {
+      "id": 5264071896698532,
+      "definition": {
+        "title": "System Utilization",
+        "type": "group",
+        "layout_type": "ordered",
+        "widgets": [
+          {
+            "id": 7124521828269372,
+            "definition": {
+              "title": "CPU Usage",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "max:docker.cpu.usage{$host,$container} by {container_name,host}",
+                  "on_right_yaxis": false,
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "area"
+                }
+              ],
+              "yaxis": {
+                "scale": "linear",
+                "label": "",
+                "include_zero": true,
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            }
+          },
+          {
+            "id": 129352236963062,
+            "definition": {
+              "title": "Memory Usage",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "max:docker.mem.rss{$host,$container} by {container_name,host}",
+                  "on_right_yaxis": false,
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "area"
+                }
+              ],
+              "yaxis": {
+                "scale": "linear",
+                "label": "",
+                "include_zero": true,
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            }
+          },
+          {
+            "id": 4941613229878368,
+            "definition": {
+              "title": "Bytes Received",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "sum:docker.net.bytes_rcvd{$host,$container} by {container_name,host}",
+                  "on_right_yaxis": false,
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "area"
+                }
+              ],
+              "yaxis": {
+                "scale": "linear",
+                "label": "",
+                "include_zero": true,
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            }
+          },
+          {
+            "id": 6356579789907190,
+            "definition": {
+              "title": "Bytes Sent",
+              "title_size": "16",
+              "title_align": "left",
+              "show_legend": false,
+              "type": "timeseries",
+              "requests": [
+                {
+                  "q": "sum:docker.net.bytes_sent{$host,$container} by {container_name,host}",
+                  "on_right_yaxis": false,
+                  "style": {
+                    "palette": "dog_classic",
+                    "line_type": "solid",
+                    "line_width": "normal"
+                  },
+                  "display_type": "area"
+                }
+              ],
+              "yaxis": {
+                "scale": "linear",
+                "label": "",
+                "include_zero": true,
+                "min": "auto",
+                "max": "auto"
+              },
+              "markers": []
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "template_variables": [
+    {
+      "name": "host",
+      "default": "*",
+      "prefix": "host"
+    },
+    {
+      "name": "gpu_device",
+      "default": "*",
+      "prefix": "name"
+    },
+    {
+      "name": "container",
+      "default": "*",
+      "prefix": "container_name"
+    }
+  ],
+  "layout_type": "ordered",
+  "is_read_only": false,
+  "notify_list": [],
+  "id": "hes-3t9-pq3"
+}

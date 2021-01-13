@@ -1,0 +1,27 @@
+{
+	"id": 28589610,
+	"name": "miner-down",
+	"type": "metric alert",
+	"query": "max(last_1m):sum:docker.containers.running{image_name:ghcr.io/hfuss/miner} by {host} < 1",
+	"message": "The `ethminer` container on host {{ host.name }} is not running.\n\nDebug with:\n\n```\nsudo docker ps\nsudo docker logs ethminer --follow --since 1m\n``` @haydenfuss@gmail.com",
+	"tags": [
+		"app:miner"
+	],
+	"options": {
+		"notify_audit": true,
+		"locked": false,
+		"timeout_h": 0,
+		"silenced": {},
+		"include_tags": true,
+		"no_data_timeframe": 30,
+		"require_full_window": true,
+		"new_host_delay": 300,
+		"notify_no_data": true,
+		"renotify_interval": 1440,
+		"escalation_message": "The `ethminer` container on host {{ host.name }} is still not running.",
+		"thresholds": {
+			"critical": 1
+		}
+	},
+	"priority": null
+}
