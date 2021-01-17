@@ -1,18 +1,20 @@
 package client
 
 import (
+	"context"
 	"fmt"
 	"net"
 	"os"
 
 	retry "github.com/avast/retry-go"
+	"github.com/sourcegraph/jsonrpc2"
 )
 
 type Api interface {
 	Init()
 	GetAddr() string
-	SendMessage()
-	// Ping() *jsonResponse
+	// SendMessage()
+	Ping() (string, error)
 	// GetDetailStats() *jsonResponse
 	Close()
 }
@@ -32,25 +34,19 @@ type jsonApiObject struct {
 }
 
 type jsonRequest struct {
-	jsonApiObject
-	Method string `json:"method"`
+	jsonApiObject `json:""`
+	Method        string `json:"method"`
 }
 
 type jsonResponse struct {
-	jsonApiObject
-	Result *jsonResult `json:"result"`
+	jsonApiObject `json:""`
+	Result        *jsonResult `json:"result"`
 }
 
 type jsonResult map[string]interface{}
 
-func (c *Client) Ping() *jsonResponse {
-
-	return nil
-}
-
-func (c *Client) GetDetailedStats() *jsonResponse {
-
-	return nil
+func (c *Client) GetDetailedStats() (*jsonResponse, error) {
+	return nil, nil
 }
 
 func (c *Client) GetAddr() string {
@@ -66,21 +62,25 @@ func (c *Client) returnConn(conn *net.TCPConn) {
 	c.conns <- conn
 }
 
-func (c *Client) SendMessage() {
+type NullHandler struct{}
+
+func (NullHandler) Handle(_ context.Context, _ *jsonrpc2.Conn, _ *jsonrpc2.Request) {}
+
+func (c *Client) Ping() (string, error) {
 	conn := <-c.conns
-	defer c.returnConn(conn)
+	//defer c.returnConn(conn)
+	ctx := context.TODO()
+	jsonRpcConn := jsonrpc2.NewConn(ctx, jsonrpc2.NewBufferedStream(conn, jsonrpc2.VarintObjectCodec{}), NullHandler{})
 
-	retry.Do(func() error {
-
-		_, sendErr := conn.Write([]byte("hello!\n"))
-		if sendErr != nil {
-			return sendErr
-		}
-
-		fmt.Println("sent hello!")
-		return nil
+	var pong string
+	pongErr := retry.Do(func() error {
+		return jsonRpcConn.Call(ctx, "miner_ping", nil, &pong)
 	})
+	if pongErr != nil {
+		return "", pongErr
+	}
 
+	return pong, nil
 }
 
 func (c *Client) Init() {
