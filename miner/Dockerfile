@@ -34,5 +34,5 @@ ENV GPU_FORCE_64BIT_PTR=0 \
     WORKER_ID=rdu-01a
 
 ENTRYPOINT ["sh", "-c"]
-CMD ["ethminer -U -P stratum+tls12://${WALLET_ADDRESS}.${WORKER_ID}@${MINE_POOL}:${STRATUM_TLS_PORT} --report-hashrate --api-bind -${API_PORT}"]
+CMD ["ethminer -U -P stratum+tls12://${WALLET_ADDRESS}.${WORKER_ID}@${MINE_POOL}:${STRATUM_TLS_PORT} --report-hashrate --api-port -${API_PORT}"]
 EXPOSE ${API_PORT}/tcp
