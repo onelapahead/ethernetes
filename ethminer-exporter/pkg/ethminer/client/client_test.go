@@ -3,6 +3,7 @@ package client
 import (
 	"context"
 	"fmt"
+	"encoding/json"
 	"testing"
 )
 
@@ -36,5 +37,10 @@ func TestPing(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	fmt.Println(statsResult)
+
+	statsBytes, err := json.Marshal(*statsResult)
+	if err != nil {
+		t.Fatal(err)
+	}
+	fmt.Println(string(statsBytes))
 }
