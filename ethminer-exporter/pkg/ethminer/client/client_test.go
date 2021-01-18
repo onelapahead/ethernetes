@@ -17,7 +17,7 @@ func TestPing(t *testing.T) {
 
 	pong, err := api.Ping()
 	if err != nil {
-		t.Fail()
+		t.Fatal(err)
 	}
 	if pong != "pong" {
 		t.Fail()
@@ -25,7 +25,7 @@ func TestPing(t *testing.T) {
 
 	statsResult, err := api.GetDetailedStats()
 	if err != nil {
-		t.Fail()
+		t.Fatal(err)
 	}
 	fmt.Println(statsResult)
 }

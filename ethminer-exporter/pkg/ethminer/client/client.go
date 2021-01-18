@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net"
 	"os"
+	"time"
 
 	retry "github.com/avast/retry-go"
 	"github.com/sourcegraph/jsonrpc2"
@@ -93,7 +94,7 @@ func (c *ApiClient) Ping() (string, error) {
 	var pong string
 	pongErr := retry.Do(func() error {
 		return conn.Call(ctx, "miner_ping", nil, &pong)
-	})
+	}, retry.Attempts(1), retry.Delay(500*time.Millisecond))
 	if pongErr != nil {
 		conn.Close()
 		conn, _ = c.newConn(ctx)
@@ -113,7 +114,7 @@ func (c *ApiClient) GetDetailedStats() (*jsonResult, error) {
 	var result *jsonResult
 	err := retry.Do(func() error {
 		return conn.Call(ctx, "miner_getstatdetail", nil, result)
-	})
+	}, retry.Attempts(1), retry.Delay(time.Second))
 	if err != nil {
 		conn.Close()
 		conn, _ = c.newConn(ctx)
