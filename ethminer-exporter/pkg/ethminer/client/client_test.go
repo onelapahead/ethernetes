@@ -1,6 +1,7 @@
 package client
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -21,4 +22,10 @@ func TestPing(t *testing.T) {
 	if pong != "pong" {
 		t.Fail()
 	}
+
+	statsResult, err := api.GetDetailedStats()
+	if err != nil {
+		t.Fail()
+	}
+	fmt.Println(statsResult)
 }

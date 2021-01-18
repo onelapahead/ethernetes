@@ -49,3 +49,5 @@ func (crlfObjectCodec) ReadObject(stream *bufio.Reader, v interface{}) error {
 
 	return nil
 }
+
+type jsonResult map[string]interface{}
