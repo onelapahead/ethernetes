@@ -11,15 +11,15 @@ import (
 	"github.com/sourcegraph/jsonrpc2"
 )
 
-type NetworkedClient interface {
-	Init()
-	getAddr() string
+type Networked interface {
+	Init(ctx context.Context)
+	GetAddr() string
 	Close()
 }
 
 type Api interface {
-	Ping() (string, error)
-	GetDetailStats() (*jsonResult, error)
+	Ping(ctx context.Context) (string, error)
+	GetStatDetail(ctx context.Context) (*jsonResult, error)
 }
 
 type ApiClient struct {
@@ -29,7 +29,7 @@ type ApiClient struct {
 
 	conns   chan *jsonrpc2.Conn
 	netAddr *net.TCPAddr
-	addr    *string
+	addr    string
 	codec   jsonrpc2.ObjectCodec
 	handler jsonrpc2.Handler
 }
@@ -38,30 +38,31 @@ func (c *ApiClient) returnConn(conn *jsonrpc2.Conn) {
 	c.conns <- conn
 }
 
+func (c *ApiClient) returnConnAsync(conn *jsonrpc2.Conn) {
+	go c.returnConn(conn)
+}
+
 func (c *ApiClient) newConn(ctx context.Context) (*jsonrpc2.Conn, error) {
 	conn, connErr := net.DialTCP("tcp", nil, c.netAddr)
 	if connErr != nil {
 		return nil, connErr
 	}
 
-	return jsonrpc2.NewConn(ctx, jsonrpc2.NewBufferedStream(conn, c.codec), c.handler), nil
+	return jsonrpc2.NewConn(ctx, jsonrpc2.NewBufferedStream(conn, c.codec), jsonrpc2.AsyncHandler(c.handler)), nil
 }
 
-func (c *ApiClient) getAddr() string {
-	if c.addr != nil {
-		return *c.addr
+func (c *ApiClient) GetAddr() string {
+	if c.addr != "" {
+		return c.addr
 	}
-	addr := fmt.Sprintf("%s:%d", c.Host, c.Port)
-	c.addr = &addr
-	return *c.addr
+	return fmt.Sprintf("%s:%d", c.Host, c.Port)
 }
 
-func (c *ApiClient) Init() {
+func (c *ApiClient) Init(ctx context.Context) {
 	var resolveErr error
-	ctx := context.TODO()
 	c.codec = crlfObjectCodec{}
 	c.handler = loggingHandler{}
-	c.netAddr, resolveErr = net.ResolveTCPAddr("tcp", c.getAddr())
+	c.netAddr, resolveErr = net.ResolveTCPAddr("tcp", c.GetAddr())
 	if resolveErr != nil {
 		fmt.Println("ResolveTCPAddr failed:", resolveErr.Error())
 		os.Exit(1)
@@ -71,7 +72,7 @@ func (c *ApiClient) Init() {
 	for i := 0; i < c.ConnPoolSize; i++ {
 		conn, connErr := c.newConn(ctx)
 		if connErr != nil {
-			fmt.Println("ResolveTCPAddr failed:", connErr.Error())
+			fmt.Println("Failed to create connection:", connErr.Error())
 			os.Exit(1)
 		}
 
@@ -82,43 +83,44 @@ func (c *ApiClient) Init() {
 func (c *ApiClient) Close() {
 	for i := 0; i < c.ConnPoolSize; i++ {
 		conn := <-c.conns
-		conn.Close()
+		_ = conn.Close()
 	}
 }
 
-func (c *ApiClient) Ping() (string, error) {
+func (c *ApiClient) do(ctx context.Context, method string, obj interface{}, opts ...retry.Option) error {
 	conn := <-c.conns
-	defer c.returnConn(conn)
-	ctx := context.TODO()
+	defer c.returnConnAsync(conn)
 
-	var pong string
-	pongErr := retry.Do(func() error {
-		return conn.Call(ctx, "miner_ping", nil, &pong)
-	}, retry.Attempts(1), retry.Delay(500*time.Millisecond))
-	if pongErr != nil {
-		conn.Close()
+	err := retry.Do(func() error {
+		return conn.Call(ctx, method, nil, obj)
+	}, opts...)
+	if err != nil {
+		// TODO if err is network related
+		// best effort to close and create new conn
+		// will still be returned to the pool async
+		_ = conn.Close()
 		conn, _ = c.newConn(ctx)
 
-		return "", pongErr
+		return err
+	}
+
+	return nil
+}
+
+func (c *ApiClient) Ping(ctx context.Context) (string, error) {
+	var pong string
+	err := c.do(ctx, "miner_ping", &pong, retry.Attempts(1), retry.Delay(10*time.Millisecond))
+	if err != nil {
+		return "", err
 	}
 
 	return pong, nil
 }
 
-func (c *ApiClient) GetDetailedStats() (*jsonResult, error) {
-	fmt.Println("blah")
-	conn := <-c.conns
-	defer c.returnConn(conn)
-	ctx := context.TODO()
-
+func (c *ApiClient) GetStatDetail(ctx context.Context) (*jsonResult, error) {
 	result := &jsonResult{}
-	err := retry.Do(func() error {
-		return conn.Call(ctx, "miner_getstatdetail", nil, result)
-	}, retry.Attempts(1), retry.Delay(time.Second))
+	err := c.do(ctx, "miner_getstatdetail", result, retry.Attempts(1), retry.Delay(400*time.Millisecond))
 	if err != nil {
-		conn.Close()
-		conn, _ = c.newConn(ctx)
-
 		return nil, err
 	}
 

@@ -1,6 +1,7 @@
 package client
 
 import (
+	"context"
 	"fmt"
 	"testing"
 )
@@ -12,10 +13,18 @@ func TestPing(t *testing.T) {
 		ConnPoolSize: 2,
 	}
 
-	api.Init()
-	defer api.Close()
+	server := &MockServer{
+		Host: "localhost",
+		Port: 3333,
+	}
+	ctx := context.TODO()
 
-	pong, err := api.Ping()
+	server.Init(ctx)
+	api.Init(ctx)
+	defer api.Close()
+	defer server.Close()
+
+	pong, err := api.Ping(ctx)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -23,7 +32,7 @@ func TestPing(t *testing.T) {
 		t.Fail()
 	}
 
-	statsResult, err := api.GetDetailedStats()
+	statsResult, err := api.GetStatDetail(ctx)
 	if err != nil {
 		t.Fatal(err)
 	}
