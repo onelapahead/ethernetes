@@ -111,7 +111,7 @@ func (c *ApiClient) GetDetailedStats() (*jsonResult, error) {
 	defer c.returnConn(conn)
 	ctx := context.TODO()
 
-	var result *jsonResult
+	result := &jsonResult{}
 	err := retry.Do(func() error {
 		return conn.Call(ctx, "miner_getstatdetail", nil, result)
 	}, retry.Attempts(1), retry.Delay(time.Second))
