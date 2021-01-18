@@ -16,7 +16,7 @@ type Server interface {
 	GetStatDetail() (*jsonResult, error)
 }
 
-type ServerHandler struct {
+type serverHandler struct {
 	server Server
 }
 
@@ -24,7 +24,8 @@ type ServerHandler struct {
 // until it returns. If you do not require strict ordering behavior
 // of received RPCs, it is suggested to wrap your handler in
 // AsyncHandler.
-func (h ServerHandler) Handle(ctx context.Context, conn *jsonrpc2.Conn, req *jsonrpc2.Request) {
+func (h serverHandler) Handle(ctx context.Context, conn *jsonrpc2.Conn, req *jsonrpc2.Request) {
+	// TODO default and replywitherror
 	switch req.Method {
 	case "miner_ping":
 		pong, _ := h.server.Ping()
@@ -32,7 +33,6 @@ func (h ServerHandler) Handle(ctx context.Context, conn *jsonrpc2.Conn, req *jso
 	case "miner_getstatdetail":
 		jsonResult, _ := h.server.GetStatDetail()
 		_ = conn.Reply(ctx, req.ID, jsonResult)
-		// TODO default
 	}
 }
 
@@ -58,7 +58,7 @@ func (s *MockServer) GetAddr() string {
 func (s *MockServer) Init(ctx context.Context) {
 	var resolveErr error
 	s.codec = crlfObjectCodec{}
-	s.handler = ServerHandler{server: s}
+	s.handler = serverHandler{server: s}
 	s.netAddr, resolveErr = net.ResolveTCPAddr("tcp", s.GetAddr())
 	if resolveErr != nil {
 		fmt.Println("ResolveTCPAddr failed:", resolveErr.Error())
@@ -76,7 +76,6 @@ func (s *MockServer) Init(ctx context.Context) {
 	s.conns = make([]*jsonrpc2.Conn, 0)
 
 	go func() {
-
 		for true {
 			ctx := context.TODO()
 			conn, acceptErr := s.listener.AcceptTCP()
@@ -87,9 +86,7 @@ func (s *MockServer) Init(ctx context.Context) {
 
 			s.conns = append(s.conns, jsonrpc2.NewConn(ctx, jsonrpc2.NewBufferedStream(conn, s.codec), s.handler))
 		}
-
 	}()
-
 }
 
 func (s *MockServer) Close() {
