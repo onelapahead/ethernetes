@@ -5,15 +5,14 @@ import (
 )
 
 func TestPing(t *testing.T) {
-	var api Api
-
-	api = &Client{
+	api := &ApiClient{
 		Host:         "localhost",
-		Port:         6666,
+		Port:         3333,
 		ConnPoolSize: 2,
 	}
 
 	api.Init()
+	defer api.Close()
 
 	pong, err := api.Ping()
 	if err != nil {
@@ -22,6 +21,4 @@ func TestPing(t *testing.T) {
 	if pong != "pong" {
 		t.Fail()
 	}
-
-	api.Close()
 }
