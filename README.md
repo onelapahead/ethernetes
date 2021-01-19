@@ -22,13 +22,14 @@ sudo systemctl restart docker
 ### Mining
 
 ```bash
-sudo nvidia-docker run -p 127.0.0.1:3333:3333/tcp --restart=always --detach=true --gpus=0 --name=ethminer ghcr.io/hfuss/miner:latest
+sudo docker network create eth
+sudo nvidia-docker run --network eth -e WORKER_ID=$(hostname) -p 127.0.0.1:3333:3333/tcp --restart=always --detach=true --gpus=0 --name=ethminer ghcr.io/hfuss/miner:latest
 ```
 
 To test the API server:
 
 ```bash
-echo '{"id":0,"jsonrpc":"2.0","method":"miner_ping"}' | netcat 127.0.0.1 3333
+sudo docker run --network eth -it ghcr.io/hfuss/ethminer-exporter:latest client --hostname ethminer getstatdetail
 ```
 
 ### Real-Time Logs
