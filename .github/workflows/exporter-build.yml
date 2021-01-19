@@ -43,7 +43,8 @@ jobs:
           make test
           fmt=$(go fmt ./.../ | wc -l)
           [[ "$fmt" -eq "0" ]]
-      
+        working-directory: ethminer-exporter
+
       - name: build
         run: |
           docker build . -f build/Dockerfile -t ghcr.io/hfuss/ethminer-exporter:${{ steps.versions.outputs.dirty-version }}
