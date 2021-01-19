@@ -10,6 +10,8 @@ import (
 	"github.com/sourcegraph/jsonrpc2"
 )
 
+var debug bool = false
+
 type loggingHandler struct{}
 
 func (loggingHandler) Handle(ctx context.Context, _ *jsonrpc2.Conn, req *jsonrpc2.Request) {
@@ -40,6 +42,9 @@ func (crlfObjectCodec) ReadObject(stream *bufio.Reader, v interface{}) error {
 	responseBytes, readErr := stream.ReadBytes('\n')
 	if readErr != nil {
 		return readErr
+	}
+	if debug {
+		fmt.Print(string(responseBytes))
 	}
 
 	unmarshalErr := json.Unmarshal(responseBytes, v)

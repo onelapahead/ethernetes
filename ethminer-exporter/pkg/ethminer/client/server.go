@@ -56,6 +56,7 @@ func (s *MockServer) GetAddr() string {
 }
 
 func (s *MockServer) Init(ctx context.Context) {
+	debug = true
 	var resolveErr error
 	s.codec = crlfObjectCodec{}
 	s.handler = serverHandler{server: s}

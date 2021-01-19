@@ -1,8 +1,0 @@
-?   	github.com/hfuss/ethernetes/ethminer-exporter	[no test files]
-=== RUN   TestPing
-blah
-{"connection":{"connected":true,"switches":1,"uri":"stratum+tls12://0xf0bEA86827AE84B7a712a4Bc716a15C465be3878.rdu-01a@us1.ethermine.org:5555"},"devices":[{"_index":0,"_mode":"CUDA","hardware":{"name":"GeForce GTX 1080 7.93 GB","pci":"26:00.0","sensors":[0,0,0],"type":"GPU"},"mining":{"hashrate":"0x01426a98","pause_reason":null,"paused":false,"segment":["0xaa9ed703c60fa6bf","0xaa9ed704c60fa6bf"],"shares":[232,1,0,440]}}],"host":{"name":"4ac7c6e0e1e2","runtime":37163,"version":"ethminer-0.19.0-alpha.0"},"mining":{"difficulty":3999938964,"epoch":389,"epoch_changes":1,"hashrate":"0x01426a98","shares":[232,1,0,440]},"monitors":null}
---- PASS: TestPing (0.00s)
-PASS
-coverage: 75.8% of statements
-ok  	github.com/hfuss/ethernetes/ethminer-exporter/pkg/ethminer/client	0.006s	coverage: 75.8% of statements
