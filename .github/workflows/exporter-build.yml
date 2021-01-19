@@ -48,7 +48,7 @@ jobs:
       - name: build
         run: |
           docker build . -f build/Dockerfile -t ghcr.io/hfuss/ethminer-exporter:${{ steps.versions.outputs.dirty-version }}
-          docker run -i ghcr.io/hfuss/ethminer-exporter:${{ steps.versions.outputs.dirty-version }} 'ethminer --help'
+          docker run -i ghcr.io/hfuss/ethminer-exporter:${{ steps.versions.outputs.dirty-version }} client --help
           docker push ghcr.io/hfuss/ethminer-exporter:${{ steps.versions.outputs.dirty-version }}
         working-directory: ethminer-exporter
 
