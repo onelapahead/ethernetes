@@ -15,6 +15,15 @@ Inspired from [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ### Dependencies
 - ...
 
+## [v0.3.0]
+### Changed
+- Using up-to-date [`nsfminer`](https://github.com/no-fee-ethereum-mining/nsfminer) instead of [`ethminer`](https://github.com/ethereum-mining/ethminer)
+
+### Dependencies
+- Base image `docker.io/nvidia/cuda:11.2-devel-ubuntu18.04`
+- New Ethereum miner [`https://github.com/no-fee-ethereum-mining/nsfminer@v1.2.4`](https://github.com/no-fee-ethereum-mining/nsfminer/releases/tag/v1.2.4)
+
+
 ## [v0.2.1]
 ### Changed
 - API server listens on all interfaces in read-only mode
