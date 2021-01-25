@@ -18,6 +18,7 @@ RUN apt-get install -y curl \
 FROM base as final
 
 COPY --from=ethminer /usr/local/bin/nsfminer /usr/local/bin/nsfminer
+RUN ln -sf /usr/local/bin/nsfminer /usr/local/bin/ethminer
 
 # TODO see if these env vars do anything still
 ENV GPU_FORCE_64BIT_PTR=0 \
