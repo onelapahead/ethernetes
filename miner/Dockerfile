@@ -1,4 +1,4 @@
-FROM docker.io/nvidia/cuda:11.1-devel-ubuntu18.04 as base
+FROM docker.io/nvidia/cuda:11.2.0-devel-ubuntu18.04 as base
 LABEL maintainer=haydenfuss@gmail.com
 LABEL org.opencontainers.image.source=https://github.com/hfuss/ethernetes
 
@@ -10,16 +10,14 @@ RUN mkdir /ethminer
 WORKDIR /ethminer
 
 RUN apt-get install -y curl \
-    && curl -sL -o ethminer.tgz https://github.com/ethereum-mining/ethminer/releases/download/v0.19.0-alpha.0/ethminer-0.19.0-alpha.0-cuda-8-linux-x86_64.tar.gz \
+    && curl -sL -o ethminer.tgz https://github.com/no-fee-ethereum-mining/nsfminer/releases/download/v1.2.4/nsfminer_1.2.4-ubuntu_18.04-cuda_11.2-opencl.tgz \
     && tar -xzvf ethminer.tgz \
-    && mv bin/ethminer /usr/local/bin/ \
-    && mkdir /usr/local/bin/kernels \
-    && mv bin/kernels/* /usr/local/bin/kernels/ \
+    && mv nsfminer /usr/local/bin/ \
     && rm -rf *
 
 FROM base as final
 
-COPY --from=ethminer /usr/local/bin/ethminer /usr/local/bin/ethminer
+COPY --from=ethminer /usr/local/bin/nsfminer /usr/local/bin/nsfminer
 
 # TODO see if these env vars do anything still
 ENV GPU_FORCE_64BIT_PTR=0 \
@@ -34,5 +32,5 @@ ENV GPU_FORCE_64BIT_PTR=0 \
     WORKER_ID=rdu-01a
 
 ENTRYPOINT ["sh", "-c"]
-CMD ["ethminer -U -P stratum+tls12://${WALLET_ADDRESS}.${WORKER_ID}@${MINE_POOL}:${STRATUM_TLS_PORT} --report-hashrate --api-port -${API_PORT}"]
+CMD ["nsfminer -U -P stratum+tls12://${WALLET_ADDRESS}.${WORKER_ID}@${MINE_POOL}:${STRATUM_TLS_PORT} --report-hashrate --api-port -${API_PORT}"]
 EXPOSE ${API_PORT}/tcp
