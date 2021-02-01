@@ -53,3 +53,7 @@ sudo nvidia-docker run -d --gpus=all \
   -e DD_SITE=datadoghq.com \
   ghcr.io/hfuss/datadog-agent:latest
 ```
+
+<p text="align">
+  <img src="docs/img/dashboard.png" width="70%" />
+</p>
