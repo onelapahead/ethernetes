@@ -134,5 +134,5 @@ sudo nvidia-docker run -d --gpus=all \
 ```
 
 <p align="center">
-  <img src="docs/img/dashboard.png" width="80%" />
+  <img src="docs/img/dashboard.png" width="98%" />
 </p>
