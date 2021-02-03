@@ -1,0 +1,36 @@
+installCRDs: false
+
+server:
+  extraArgs:
+    - '--insecure'
+  ingress:
+    enabled: true
+    https: false
+
+config:
+  repositories: |
+      - type: git
+        url: https://hfuss/ethernetes
+      - type: helm
+        url: https://nvidia.github.io/gpu-operator
+        name: nvidia
+
+additionalApplications:
+  - name: bootstrap
+    namespace: e8s-system
+    additionalLabels: {}
+    additionalAnnotations: {}
+    project: default
+    source:
+      repoURL: https://github.com/hfuss/ethernetes.git
+      targetRevision: k3s-pt1
+      path: gitops/
+      directory:
+        recurse: true
+    destination:
+      server: https://kubernetes.default.svc
+      namespace: e8s-system
+    syncPolicy:
+      automated:
+        prune: true
+        selfHeal: true
