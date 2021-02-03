@@ -6,7 +6,7 @@ spec:
   project: default
   source:
     repoURL: https://nvidia.github.io/gpu-operator
-    chart: nvidia/gpu-operator
+    chart: gpu-operator
     targetRevision: '1.5.1'
     helm:
       version: v3
