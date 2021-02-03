@@ -3,12 +3,15 @@
 sudo -s
 
 curl -sfL https://get.k3s.io | sh -
-
 snap install helm --classic
 
-alias k=kubectl
+cat <<EOF > /etc/modprobe.d/blacklist-nouveau.conf
+blacklist nouveau
+options nouveau modeset=0
+EOF
+update-initramfs -u
 
-k create ns e8s-system
+kubectl create ns e8s-system
 helm upgrade --install \
     argo-cd argo/argo-cd \
     -n e8s-system \
