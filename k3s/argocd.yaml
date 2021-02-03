@@ -10,7 +10,7 @@ server:
 config:
   repositories: |
       - type: git
-        url: https://hfuss/ethernetes
+        url: https://github.com/hfuss/ethernetes
       - type: helm
         url: https://nvidia.github.io/gpu-operator
         name: nvidia
