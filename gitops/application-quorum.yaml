@@ -13,6 +13,7 @@ spec:
         longhornStorageEnabled: true
         imagePullSecrets:
           - name: github-creds
+        replicaCount: 4
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: kaleido
