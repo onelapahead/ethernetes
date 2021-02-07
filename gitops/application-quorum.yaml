@@ -6,6 +6,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/hfuss/quorum-on-k8s
+    targetRevision: quorum
     path: charts/quorum
     helm: {}
   destination:
