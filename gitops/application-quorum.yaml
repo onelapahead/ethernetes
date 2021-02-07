@@ -10,7 +10,7 @@ spec:
     path: charts/quorum
     helm:
       values: |
-        localPathStorageEnabled: true
+        longhornStorageEnabled: true
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: kaleido
