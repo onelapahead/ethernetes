@@ -11,6 +11,8 @@ spec:
     helm:
       values: |
         longhornStorageEnabled: true
+        imagePullSecrets:
+          - name: github-creds
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: kaleido
