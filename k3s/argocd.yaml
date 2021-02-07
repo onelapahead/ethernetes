@@ -13,6 +13,7 @@ server:
   config:
     repositories: |
         - url: https://github.com/hfuss/ethernetes
+        - url: https://github.com/hfuss/quorum-on-k8s
         - type: helm
           url: https://nvidia.github.io/gpu-operator
           name: nvidia

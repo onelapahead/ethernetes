@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: quorum
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/hfuss/quorum-on-k8x
+    path: charts/quorum
+    helm: {}
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: e8s-system
+  syncPolicy: {}
