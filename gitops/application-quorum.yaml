@@ -5,7 +5,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/hfuss/quorum-on-k8x
+    repoURL: https://github.com/hfuss/quorum-on-k8s
     path: charts/quorum
     helm: {}
   destination:
