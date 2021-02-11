@@ -9,6 +9,8 @@ server:
   ingress:
     enabled: true
     https: false
+    hosts:
+      - argocd.local
   replicas: 1
   config:
     repositories: |
