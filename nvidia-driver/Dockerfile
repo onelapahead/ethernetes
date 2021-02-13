@@ -31,7 +31,7 @@ ENV DRIVER_VERSION=$DRIVER_VERSION
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Install the userspace components and copy the kernel module sources.
-RUN pushd /tmp && \
+RUN cd /tmp && \
     curl -fSsl -O $BASE_URL/$DRIVER_VERSION/NVIDIA-Linux-x86_64-$DRIVER_VERSION.run && \
     sh NVIDIA-Linux-x86_64-$DRIVER_VERSION.run -x && \
     cd NVIDIA-Linux-x86_64-$DRIVER_VERSION* && \
@@ -52,9 +52,7 @@ RUN pushd /tmp && \
     mkdir -p /usr/src/nvidia-$DRIVER_VERSION && \
     mv LICENSE mkprecompiled kernel /usr/src/nvidia-$DRIVER_VERSION && \
     sed '9,${/^\(kernel\|LICENSE\)/!d}' .manifest > /usr/src/nvidia-$DRIVER_VERSION/.manifest && \
-    rm -rf /tmp/* && \
-    popd && \
-    chmod +x nvidia-driver
+    rm -rf /tmp/*
 
 COPY nvidia-driver /usr/local/bin
 WORKDIR /usr/src/nvidia-$DRIVER_VERSION
