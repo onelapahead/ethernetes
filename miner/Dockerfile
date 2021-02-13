@@ -15,7 +15,7 @@ RUN apt-get install -y curl \
     && mv nsfminer /usr/local/bin/ \
     && rm -rf *
 
-FROM base as final
+FROM docker.io/nvidia/cuda:11.2.0-base-ubuntu18.04 as final
 
 COPY --from=ethminer /usr/local/bin/nsfminer /usr/local/bin/nsfminer
 RUN ln -sf /usr/local/bin/nsfminer /usr/local/bin/ethminer
