@@ -1,6 +1,8 @@
 # https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/getting-started.html#install-the-gpu-operator
 # https://gitlab.com/nvidia/container-images/driver/-/blob/b9736822af4c0530c80db3335c0ecbd5ac36d4c8/ubuntu18.04/
 FROM docker.io/nvidia/cuda:11.2.0-base-ubuntu18.04
+LABEL maintainer=haydenfuss@gmail.com
+LABEL org.opencontainers.image.source=https://github.com/hfuss/ethernetes
 
 RUN dpkg --add-architecture i386 && \
     apt-get update && apt-get install -y --no-install-recommends \
