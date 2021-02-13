@@ -27,7 +27,7 @@ jobs:
           echo "::set-output name=git-tag::nvidia-driver-v${version}"
           echo "::set-output name=version::v${version}"
           echo "::set-output name=image-version::v${version}-ubuntu18.04"
-          echo "::set-output name=dirty-image-version::v${version}-ubuntu18.04-$(git rev-parse --short HEAD)"
+          echo "::set-output name=dirty-image-version::v${version}-$(git rev-parse --short HEAD)-ubuntu18.04"
         working-directory: nvidia-driver
 
       - name: docker login
