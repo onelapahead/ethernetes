@@ -13,6 +13,10 @@ spec:
       values: |
         operator:
           defaultRuntime: containerd
+
+        driver:
+          repository: ghcr.io/hfuss/nvidia-driver
+          version: v0.1.0-f1a2b0c
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: e8s-system
