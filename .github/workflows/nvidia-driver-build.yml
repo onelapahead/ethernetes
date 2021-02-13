@@ -23,7 +23,7 @@ jobs:
       - name: extract versions
         id: versions
         run: |
-          version=$(cat VERSION)
+          version=$(cat VERSION)-ubuntu18.04
           echo "::set-output name=git-tag::nvidia-driver-v${version}"
           echo "::set-output name=version::v${version}"
           echo "::set-output name=dirty-version::v${version}-$(git rev-parse --short HEAD)"
