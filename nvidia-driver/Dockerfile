@@ -53,7 +53,7 @@ RUN cd /tmp && \
     mv LICENSE mkprecompiled kernel /usr/src/nvidia-$DRIVER_VERSION && \
     sed '9,${/^\(kernel\|LICENSE\)/!d}' .manifest > /usr/src/nvidia-$DRIVER_VERSION/.manifest && \
     rm -rf /tmp/* && \
-    chmod +x /usr/local/bin/nvidia-driver
+    chmod +x nvidia-driver
 
 COPY nvidia-driver /usr/local/bin
 WORKDIR /usr/src/nvidia-$DRIVER_VERSION
