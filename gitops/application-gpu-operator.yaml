@@ -11,16 +11,6 @@ spec:
     helm:
       version: v3
       values: |
-        operator:
-          defaultRuntime: containerd
-
-        toolkit:
-          env:
-            - name: CONTAINERD_CONFIG
-              value: /run/snap.docker/containerd/containerd.toml
-            - name: CONTAINERD_SOCKET
-              value: /run/k3s/containerd/containerd.sock
-
         driver:
           repository: ghcr.io/hfuss
           image: nvidia-driver

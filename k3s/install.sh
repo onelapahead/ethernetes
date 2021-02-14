@@ -1,7 +1,8 @@
 #!/bin/bash
 
-sudo -s
+set -e
 
+mkdir -p /etc/rancher/k3s/
 cat <<EOF > /etc/rancher/k3s/config.yaml
 write-kubeconfig-mode: "0644"
 tls-san:
@@ -9,6 +10,7 @@ tls-san:
 docker: true
 EOF
 
+apt install docker.io
 curl -sfL https://get.k3s.io | sh -
 snap install helm --classic
 
@@ -24,9 +26,14 @@ fi
 if ! cat /root/.bashrc | grep KUBECONFIG; then
   cat <<EOF >> /root/.bashrc
 export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
-alias k=kubectl
-alias oc=kubectl
-alias h=helm
+EOF
+fi
+
+if ! cat /home/hayden/.bash_aliases | grep kubectl; then
+  cat <<EOF >> /home/hayden/.bash_aliases
+alias k='kubectl'
+alias oc='kubectl'
+alias h='helm'
 EOF
 fi
 
