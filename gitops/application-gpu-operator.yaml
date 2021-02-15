@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gpu-operator
+spec:
+  project: default
+  source:
+    repoURL: https://nvidia.github.io/gpu-operator
+    chart: gpu-operator
+    targetRevision: '1.5.2'
+    helm:
+      version: v3
+      values: |
+        driver:
+          repository: ghcr.io/hfuss
+          image: nvidia-driver
+          version: v0.1.0-1378ee6
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: e8s-system
+  syncPolicy: {}

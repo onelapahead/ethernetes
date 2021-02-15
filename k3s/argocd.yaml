@@ -1,0 +1,41 @@
+installCRDs: false
+
+dex:
+  enabled: false
+
+server:
+  extraArgs:
+    - '--insecure'
+  ingress:
+    enabled: true
+    https: false
+    hosts:
+      - argocd.local
+  replicas: 1
+  config:
+    repositories: |
+        - url: https://github.com/hfuss/ethernetes
+        - url: https://github.com/hfuss/quorum-on-k8s
+        - type: helm
+          url: https://nvidia.github.io/gpu-operator
+          name: nvidia
+
+  additionalApplications:
+    - name: bootstrap
+      namespace: e8s-system
+      additionalLabels: {}
+      additionalAnnotations: {}
+      project: default
+      source:
+        repoURL: https://github.com/hfuss/ethernetes.git
+        targetRevision: k3s-pt1
+        path: gitops/
+        directory:
+          recurse: true
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: e8s-system
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
