@@ -19,6 +19,9 @@ server:
         - type: helm
           url: https://nvidia.github.io/gpu-operator
           name: nvidia
+        - type: helm
+          url: https://charts.longhorn.io
+          name: longhorn
 
   additionalApplications:
     - name: bootstrap
@@ -28,7 +31,7 @@ server:
       project: default
       source:
         repoURL: https://github.com/hfuss/ethernetes.git
-        targetRevision: k3s-pt1
+        targetRevision: main
         path: gitops/
         directory:
           recurse: true
