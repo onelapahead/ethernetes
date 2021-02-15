@@ -15,6 +15,15 @@ Inspired from [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ### Dependencies
 - ...
 
+## [v0.4.0]
+### Changed
+- Decreasing the final image size using the `base` image rather than
+  the `devel` image required for building
+
+### Dependencies
+- Base image `docker.io/nvidia/cuda:11.2-base-ubuntu18.04`
+
+
 ## [v0.3.0]
 ### Changed
 - Using up-to-date [`nsfminer`](https://github.com/no-fee-ethereum-mining/nsfminer) instead of [`ethminer`](https://github.com/ethereum-mining/ethminer)
