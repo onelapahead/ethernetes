@@ -4,7 +4,7 @@ set -e
 
 mkdir -p /etc/rancher/k3s/
 cat <<EOF > /etc/rancher/k3s/config.yaml
-write-kubeconfig-mode: "0644"
+write-kubeconfig-mode: "0600"
 tls-san:
   - "ethernetes.local"
 docker: true
@@ -42,11 +42,5 @@ export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
 [[ -d "ethernetes/" ]] || git clone git@github.com/hfuss/etherenetes
 
 pushd ethernetes/k3s/
-  kubectl create ns e8s-system || true
-  helm upgrade --install \
-      argo-cd argo/argo-cd \
-      -n e8s-system \
-      -f argocd.yaml \
-      --atomic \
-      --wait
+  ./bootstrap.sh
 popd

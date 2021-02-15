@@ -14,8 +14,11 @@ spec:
         driver:
           repository: ghcr.io/hfuss
           image: nvidia-driver
-          version: v0.1.0-1378ee6
+          version: v0.1.0
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: e8s-system
-  syncPolicy: {}
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
