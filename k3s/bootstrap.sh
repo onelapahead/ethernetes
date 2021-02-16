@@ -17,10 +17,9 @@ kubectl create ns datadog || true
 
 
 set +e
-if ! kubectl get secret -n datadog datadog-api-creds 2> /dev/null; then
+if ! kubectl get secret -n datadog datadog-creds 2> /dev/null; then
   set -e
-  #kubectl create secret ...
-  echo "would made secrets"
+  kubectl create secret generic datadog-creds --from-literal api-key="$(lpass show --password datadog-api-key)" --namespace="datadog"
 fi
 
 set -e

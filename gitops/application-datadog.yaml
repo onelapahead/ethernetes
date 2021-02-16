@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: datadog
+spec:
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: datadog
+  project: default
+  source:
+    repoURL: https://helm.datadoghq.com
+    chart: datadog
+    helm:
+      values: |
+        datadog:
+          apiKeyExistingSecret: datadog-creds
+
+        agents:
+          image:
+            repository: ghcr.io/hfuss/datadog-agent
+            tag: latest
+            pullPolicy: Always
+          containers:
+            agent:
+              env:
+                - name: NVIDIA_VISIBLE_DEVICES
+                  value: "all"
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 10Mi
+                limits:
+                  cpu: 100m
+                  memory: 1Gi
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
