@@ -1,0 +1,8 @@
+apiVersion: v2
+name: miner
+description: A Helm chart for deploying an Ethereum GPU miner on Kubernetes.
+maintainers:
+  - name: hfuss
+type: application
+version: 0.1.0
+appVersion: "0.4.0"

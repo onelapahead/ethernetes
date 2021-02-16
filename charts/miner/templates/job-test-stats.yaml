@@ -1,0 +1,18 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "{{ include "miner.fullname" . }}-test-stats"
+  labels:
+    {{- include "miner.labels" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-delete-policy: before-hook-creation
+spec:
+  activeDeadlineSeconds: 30
+  backoffLimit: 2
+  template:
+    metadata:
+      labels:
+        {{- include "miner.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- include "miner.podSpec.testStats" . | nindent 6 }}
