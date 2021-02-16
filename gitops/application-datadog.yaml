@@ -10,6 +10,7 @@ spec:
   source:
     repoURL: https://helm.datadoghq.com
     chart: datadog
+    targetRevision: 2.8.4
     helm:
       values: |
         datadog:
