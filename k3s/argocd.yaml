@@ -4,11 +4,15 @@ dex:
   enabled: false
 
 server:
+  extraArgs:
+    - '--insecure'
   ingress:
     enabled: true
-    https: true
+    https: false
     hosts:
       - argocd.brxblx.io
+    annotations:
+      kubernetes.io/ingress.class: traefik
   replicas: 1
   config:
     repositories: |
