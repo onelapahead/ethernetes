@@ -4,11 +4,9 @@ dex:
   enabled: false
 
 server:
-  extraArgs:
-    - '--insecure'
   ingress:
     enabled: true
-    https: false
+    https: true
     hosts:
       - argocd.brxblx.io
   replicas: 1
