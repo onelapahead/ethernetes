@@ -1,0 +1,7 @@
+{{- define "miner.podSpec.testStats" }}
+containers:
+  - name: stats
+    image: ghcr.io/hfuss/ethminer-exporter:latest
+    args: ['client', '--hostname', '{{ include "miner.fullname" . }}', '--port', '{{ .Values.service.port }}', 'getstatdetail']
+restartPolicy: Never
+{{- end }}

@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "miner.fullname" . }}-test-stats"
+  labels:
+    {{- include "miner.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  {{- include "miner.podSpec.testStats" . | nindent 2 }}
