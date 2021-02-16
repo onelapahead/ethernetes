@@ -8,8 +8,9 @@ spec:
     namespace: e8s-system
   project: default
   source:
-    repoURL: https://github.com/hfuss/etherentes
+    repoURL: https://github.com/hfuss/ethernetes
     path: charts/miner
+    targetRevision: main
     helm:
       values: |
         nodeSelector:
