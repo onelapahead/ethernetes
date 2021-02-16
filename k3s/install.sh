@@ -6,7 +6,7 @@ mkdir -p /etc/rancher/k3s/
 cat <<EOF > /etc/rancher/k3s/config.yaml
 write-kubeconfig-mode: "0600"
 tls-san:
-  - "ethernetes.local"
+  - "ethernetes.brxblx.io"
 docker: true
 EOF
 
