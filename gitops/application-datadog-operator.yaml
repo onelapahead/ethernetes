@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: datadog-operator
+spec:
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: datadog
+  project: default
+  source:
+    repoURL: https://
+    chart: datadog-operator
+    helm:
+      values: |
+        ...
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

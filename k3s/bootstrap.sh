@@ -12,3 +12,7 @@ kubectl create ns longhorn-system || true
 kubectl create ns cert-manager || true
 kubectl create ns kaleido || true
 kubectl create ns datadog || true
+
+if ! kubectl get secret -n datadog datadog-api-creds 2> /dev/null; then
+  kubectl create secret ...
+fi

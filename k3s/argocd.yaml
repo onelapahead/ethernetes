@@ -10,7 +10,7 @@ server:
     enabled: true
     https: false
     hosts:
-      - argocd.local
+      - argocd.brxblx.io
   replicas: 1
   config:
     repositories: |
