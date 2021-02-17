@@ -13,6 +13,9 @@ spec:
     targetRevision: main
     helm:
       values: |
+        config:
+          miningPool: us2.ethermine.org
+
         nodeSelector:
           kubernetes.io/hostname: brx-01a
 

@@ -36,6 +36,8 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
+            - name: MINE_POOL
+              value: {{ .Values.config.miningPool | quote }}
           ports:
             - name: jsonrpc
               containerPort: 3333
