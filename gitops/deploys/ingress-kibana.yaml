@@ -16,7 +16,7 @@ spec:
               service:
                 name: search-kb-http
                 port:
-                  name: https
+                  number: 5601
   tls:
     - secretName: search-tls
       hosts:
