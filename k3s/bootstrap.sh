@@ -10,6 +10,7 @@ set +e
 if ! helm get all argocd -n e8s-system > /dev/null; then
   helm install \
     argocd argo/argo-cd \
+    --set server.extraArgs={--insecure} \
     -n e8s-system \
     -f argocd.yaml \
     --wait

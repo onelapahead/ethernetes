@@ -1,4 +1,5 @@
 server:
+  extraArgs: []
   ingress:
     enabled: true
     https: true
