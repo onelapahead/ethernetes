@@ -33,7 +33,7 @@ server:
       project: default
       source:
         repoURL: https://github.com/hfuss/ethernetes
-        targetRevision: gcloud-tls
+        targetRevision: main
         path: gitops/bootstrap/
       destination:
         name: in-cluster

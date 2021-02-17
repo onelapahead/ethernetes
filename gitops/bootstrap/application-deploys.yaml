@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/hfuss/ethernetes
     path: gitops/deploys/
-    targetRevision: gcloud-tls # TODO change to main
+    targetRevision: main
   syncPolicy:
     automated:
       selfHeal: true
