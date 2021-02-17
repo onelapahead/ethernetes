@@ -5,7 +5,7 @@ metadata:
 spec:
   destination:
     name: in-cluster
-    namespace: e8s-system
+    namespace: ethereum
   project: default
   source:
     repoURL: https://github.com/hfuss/ethernetes

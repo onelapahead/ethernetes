@@ -12,12 +12,6 @@ helm upgrade --install \
     --atomic \
     --wait
 
-# Namespaces
-kubectl create ns longhorn-system || true
-kubectl create ns cert-manager || true
-kubectl create ns kaleido || true
-kubectl create ns datadog || true
-
 # Secrets
 set +e
 if ! kubectl get secret -n datadog datadog-creds 2> /dev/null; then
