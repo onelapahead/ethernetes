@@ -32,7 +32,7 @@ server:
       additionalAnnotations: {}
       project: default
       source:
-        repoURL: https://github.com/hfuss/ethernetes.git
+        repoURL: https://github.com/hfuss/ethernetes
         targetRevision: gcloud-tls
         path: gitops/bootstrap/
       destination:
