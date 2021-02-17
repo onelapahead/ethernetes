@@ -19,7 +19,8 @@ spec:
           hostNetwork: true
 
           service:
-            enabled: false
+            enabled: true
+            type: ClusterIP
   syncPolicy:
     automated:
       selfHeal: true
