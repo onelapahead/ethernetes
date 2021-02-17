@@ -84,6 +84,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: filebeat
+    namespace: e8s-system
 roleRef:
   kind: ClusterRole
   name: filebeat
