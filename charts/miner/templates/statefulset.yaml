@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ include "miner.fullname" . }}
   labels:
@@ -9,6 +9,9 @@ spec:
   selector:
     matchLabels:
       {{- include "miner.selectorLabels" . | nindent 6 }}
+  serviceName: {{ include "miner.fullname" . }}
+  updateStrategy:
+    type: RollingUpdate
   template:
     metadata:
       {{- with .Values.podAnnotations }}
