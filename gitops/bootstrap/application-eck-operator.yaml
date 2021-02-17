@@ -5,7 +5,7 @@ metadata:
 spec:
   destination:
     name: in-cluster
-    namespace: elastic-system
+    namespace: e8s-system
   project: default
   source:
     repoURL: https://helm.elastic.co
