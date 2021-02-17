@@ -4,7 +4,7 @@ metadata:
   name: quorum
 spec:
   destination:
-    server: in-cluster
+    name: in-cluster
     namespace: ethereum
   project: default
   source:

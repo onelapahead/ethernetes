@@ -4,7 +4,7 @@ metadata:
   name: datadog
 spec:
   destination:
-    server: in-cluster
+    name: in-cluster
     namespace: datadog
   project: default
   source:
