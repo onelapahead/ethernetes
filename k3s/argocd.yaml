@@ -8,11 +8,19 @@ server:
     - '--insecure'
   ingress:
     enabled: true
-    https: false
+    https: true
     hosts:
       - argocd.brxblx.io
+    tls:
+
     annotations:
-      kubernetes.io/ingress.class: traefik
+      kubernetes.io/ingress.class: nginx
+  certificate:
+    enabled: true
+    domain: argocd.brxblx.io
+    issuer:
+      kind: ClusterIssuer
+      name: letsencrypt-prod
   replicas: 1
   config:
     repositories: |
