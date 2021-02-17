@@ -1,0 +1,14 @@
+apiVersion: kibana.k8s.elastic.co/v1
+kind: Kibana
+metadata:
+  name: search
+spec:
+  version: 7.11.1
+  elasticsearchRef:
+    name: search
+    namespace: e8s-system
+  count: 1
+  http:
+    tls:
+      certificate:
+        secretName: search-tls
