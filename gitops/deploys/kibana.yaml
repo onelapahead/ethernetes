@@ -11,6 +11,6 @@ spec:
   http:
     tls:
       selfSignedCertificate:
-        disabled: false
+        disabled: true
       certificate:
         secretName: search-tls
