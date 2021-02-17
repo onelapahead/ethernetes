@@ -3,10 +3,6 @@ installCRDs: false
 dex:
   enabled: false
 
-configs:
-  secret:
-    createSecret: false
-
 server:
   replicas: 1
   config:

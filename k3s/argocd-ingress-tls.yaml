@@ -9,12 +9,7 @@ server:
           - argocd.brxblx.io
         secretName: argocd-secret
     annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
       kubernetes.io/ingress.class: nginx
       kubernetes.io/tls-acme: "true"
       nginx.ingress.kubernetes.io/ssl-passthrough: "true"
-  certificate:
-    enabled: true
-    domain: argocd.brxblx.io
-    issuer:
-      kind: ClusterIssuer
-      name: letsencrypt-prod
