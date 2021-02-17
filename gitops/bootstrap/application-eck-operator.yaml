@@ -24,4 +24,3 @@ spec:
         - /webhooks/4/clientConfig/caBundle
       kind: ValidatingWebhookConfiguration
       group: admissionregistration.k8s.io
-      name: elastic-operator.elastic-system.k8s.elastic.co
