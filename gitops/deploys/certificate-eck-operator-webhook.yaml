@@ -9,4 +9,4 @@ spec:
   issuerRef:
     name: selfsigned
     kind: ClusterIssuer
-  secretName: eck-operator-webhook-tls
+  secretName: elastic-operator-webhook-cert

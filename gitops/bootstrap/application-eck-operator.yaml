@@ -15,8 +15,7 @@ spec:
       values: |
         webhook:
           manageCerts: false
-          certsSecret: eck-operator-webhook-tls
-          certManagerCert: eck-operator-webhook-tls
+          certManagerCert: elastic-operator-webhook-cert
   syncPolicy:
     automated:
       selfHeal: true
