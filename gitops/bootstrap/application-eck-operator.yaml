@@ -11,6 +11,12 @@ spec:
     repoURL: https://helm.elastic.co
     chart: eck-operator
     targetRevision: 1.4.0
+    helm:
+      values: |
+        webhook:
+          manageCerts: false
+          certsSecret: eck-operator-webhook-tls
+          certManagerCert: eck-operator-webhook-tls
   syncPolicy:
     automated:
       selfHeal: true
@@ -24,3 +30,4 @@ spec:
         - /webhooks/4/clientConfig/caBundle
       kind: ValidatingWebhookConfiguration
       group: admissionregistration.k8s.io
+      name: elastic-operator.elastic-system.k8s.elastic.co
