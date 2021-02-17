@@ -4,13 +4,14 @@ server:
     enabled: true
     https: true
     hosts:
-      - argocd.brxblx.io
+      - cd.brxblx.io
     tls:
       - hosts:
-          - argocd.brxblx.io
+          - cd.brxblx.io
         secretName: argocd-secret
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
       kubernetes.io/ingress.class: nginx
       kubernetes.io/tls-acme: "true"
       nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
