@@ -5,7 +5,7 @@ metadata:
 spec:
   destination:
     name: in-cluster
-    namespace: kube-system
+    namespace: ingress-nginx
   project: default
   source:
     repoURL: https://kubernetes.github.io/ingress-nginx
@@ -17,6 +17,9 @@ spec:
           dnsPolicy: ClusterFirstWithHostNet
           reportNodeInternalIp: true
           hostNetwork: true
+
+          service:
+            enabled: false
   syncPolicy:
     automated:
       selfHeal: true
