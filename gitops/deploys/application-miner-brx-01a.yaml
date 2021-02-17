@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: miner-brx-01a
+spec:
+  destination:
+    name: in-cluster
+    namespace: ethereum
+  project: default
+  source:
+    repoURL: https://github.com/hfuss/ethernetes
+    path: charts/miner
+    targetRevision: main
+    helm:
+      values: |
+        config:
+          miningPool: us2.ethermine.org
+
+        nodeSelector:
+          kubernetes.io/hostname: brx-01a
+
+        resources:
+          limits:
+            nvidia.com/gpu: 2
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true

@@ -8,6 +8,9 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+config:
+  miningPool: us1.ethermine.org
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: true

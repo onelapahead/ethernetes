@@ -16,10 +16,19 @@
               "title_size": "16",
               "title_align": "left",
               "show_legend": false,
+              "legend_layout": "vertical",
+              "legend_columns": [
+                "avg",
+                "min",
+                "max",
+                "value",
+                "sum"
+              ],
+              "time": {},
               "type": "timeseries",
               "requests": [
                 {
-                  "q": "min:docker.containers.running{image_name:ghcr.io/hfuss/miner,$host} by {host}",
+                  "q": "min:docker.containers.running{$host,image_name:ghcr.io/hfuss/miner} by {host}, min:docker.containers.running{$host AND (kube_container_name:miner)} by {host}",
                   "on_right_yaxis": false,
                   "style": {
                     "palette": "dog_classic",

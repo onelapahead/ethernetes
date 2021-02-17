@@ -4,15 +4,6 @@ dex:
   enabled: false
 
 server:
-  extraArgs:
-    - '--insecure'
-  ingress:
-    enabled: true
-    https: false
-    hosts:
-      - argocd.brxblx.io
-    annotations:
-      kubernetes.io/ingress.class: traefik
   replicas: 1
   config:
     repositories: |
@@ -41,13 +32,11 @@ server:
       additionalAnnotations: {}
       project: default
       source:
-        repoURL: https://github.com/hfuss/ethernetes.git
-        targetRevision: main
-        path: gitops/
-        directory:
-          recurse: true
+        repoURL: https://github.com/hfuss/ethernetes
+        targetRevision: gcloud-tls
+        path: gitops/bootstrap/
       destination:
-        server: https://kubernetes.default.svc
+        name: in-cluster
         namespace: e8s-system
       syncPolicy:
         automated:

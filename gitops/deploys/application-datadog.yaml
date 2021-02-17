@@ -4,7 +4,7 @@ metadata:
   name: datadog
 spec:
   destination:
-    server: 'https://kubernetes.default.svc'
+    name: in-cluster
     namespace: datadog
   project: default
   source:

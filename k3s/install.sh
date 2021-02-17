@@ -8,6 +8,11 @@ write-kubeconfig-mode: "0600"
 tls-san:
   - "ethernetes.brxblx.io"
 docker: true
+disable:
+  - traefik
+  - servicelb
+  - local-storage
+disable-cloud-controller: true
 EOF
 
 apt install docker.io
