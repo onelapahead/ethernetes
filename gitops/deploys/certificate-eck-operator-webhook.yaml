@@ -1,0 +1,10 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  namespace: elastic-system
+  name: eck-operator-webhook
+spec:
+  issuerRef:
+    name: selfsigned
+    kind: ClusterIssuer
+  secretName: eck-operator-webhook-tls
