@@ -4,6 +4,8 @@ metadata:
   namespace: elastic-system
   name: eck-operator-webhook
 spec:
+  dnsNames:
+    - elastic-webhook-server.elastic-system.svc
   issuerRef:
     name: selfsigned
     kind: ClusterIssuer
