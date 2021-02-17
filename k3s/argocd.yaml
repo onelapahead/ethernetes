@@ -3,24 +3,11 @@ installCRDs: false
 dex:
   enabled: false
 
-server:
-  extraArgs:
-    - '--insecure'
-  ingress:
-    enabled: true
-    https: true
-    hosts:
-      - argocd.brxblx.io
-    tls:
+configs:
+  secret:
+    createSecret: false
 
-    annotations:
-      kubernetes.io/ingress.class: nginx
-  certificate:
-    enabled: true
-    domain: argocd.brxblx.io
-    issuer:
-      kind: ClusterIssuer
-      name: letsencrypt-prod
+server:
   replicas: 1
   config:
     repositories: |
@@ -50,12 +37,10 @@ server:
       project: default
       source:
         repoURL: https://github.com/hfuss/ethernetes.git
-        targetRevision: main
-        path: gitops/
-        directory:
-          recurse: true
+        targetRevision: gcloud-tls
+        path: gitops/bootstrap/
       destination:
-        server: https://kubernetes.default.svc
+        name: in-cluster
         namespace: e8s-system
       syncPolicy:
         automated:

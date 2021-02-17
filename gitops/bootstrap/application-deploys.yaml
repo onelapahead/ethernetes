@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: deploys
+spec:
+  destination:
+    name: in-cluster
+    namespace: e8s-system
+  project: default
+  source:
+    repoURL: https://github.com/hfuss/ethernetes
+    path: gitops/deploys/
+    targetRevision: gcloud-tls # TODO change to main
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
