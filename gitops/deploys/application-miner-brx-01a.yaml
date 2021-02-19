@@ -10,12 +10,9 @@ spec:
   source:
     repoURL: https://github.com/hfuss/ethernetes
     path: charts/miner
-    targetRevision: main
+    targetRevision: latest-miner
     helm:
       values: |
-        config:
-          miningPool: us2.ethermine.org
-
         nodeSelector:
           kubernetes.io/hostname: brx-01a
 
