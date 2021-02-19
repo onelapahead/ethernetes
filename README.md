@@ -2,6 +2,20 @@
 
 Learning more about blockchain and deep learning with GPUs and K8s.
 
+* [Getting Started](#getting-started)
+  * [Requirements](#requirements)
+  * [Install](#install)
+  * [Deploying a Miner](#deploying-a-miner)
+    * [via ArgoCD](#via-argocd)
+    * [via Helm](#via-helm)
+* [Adding a New Node](#adding-a-new-node)
+* [Managing Apps via ArgoCD](#managing-apps-via-argocd)
+* [Monitoring](#monitoring)
+  * [Elastic](#elastic)
+  * [DataDog](#datadog)
+
+For more info on specific components, see the [additional docs](docs/README.md).
+
 ## Getting Started
 
 ### Requirements
@@ -88,11 +102,11 @@ helm upgrade --install ethereum-miner charts/miner \
 helm test --logs -n ethereum ethereum-miner
 ```
 
-### Adding a New Node
+## Adding a New Node
 
 TODO ...
 
-### Managing Apps via ArgoCD
+## Managing Apps via ArgoCD
 
 Application manifests for ArgoCD live underneath the [`gitops/`](gitops/) folder
 of this repo. You can access ArgoCD via the CLI:
@@ -124,9 +138,9 @@ the UI:
   <img src="docs/img/argocd.png" width="98%" />
 </p>
 
-### Monitoring
+## Monitoring
 
-#### Elastic
+### Elastic
 
 You can see logs from all the miners in the existing cluster [here](https://search.brxblx.io/goto/48ff67e4c824ac8c67314bf8e2293212),
 
@@ -136,7 +150,7 @@ You can see logs from all the miners in the existing cluster [here](https://sear
 
 Explore the cluster's logs at [search.brxblx.io](https://search.brxblx.io).
 
-#### DataDog
+### DataDog
 
 Using [DataDog](https://app.datadoghq.com/dashboard/hes-3t9-pq3/ethereum-miners?from_ts=1613723498904&live=true&to_ts=1613737898904),
 it's easy to visualize the health of the miners with respect to the GPUs and system
