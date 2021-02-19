@@ -1,7 +1,6 @@
 #!/bin/bash
 
-# DEBUG
-set -ex
+set -e
 
 miningPools=($MINING_POOLS)
 poolArgs=""
