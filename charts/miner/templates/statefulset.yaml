@@ -36,7 +36,6 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - --report-hashrate
-            - --nocolor
             - --syslog
             - --exit
             {{- if .Values.extraArgs }}
