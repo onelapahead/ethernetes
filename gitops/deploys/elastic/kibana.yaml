@@ -7,7 +7,6 @@ spec:
   version: 7.11.1
   elasticsearchRef:
     name: search
-    namespace: e8s-system
   count: 1
   http:
     tls:

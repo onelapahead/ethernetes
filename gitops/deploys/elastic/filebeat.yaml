@@ -85,7 +85,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: filebeat
-    namespace: e8s-system
+    namespace: elastic-system
 roleRef:
   kind: ClusterRole
   name: filebeat
