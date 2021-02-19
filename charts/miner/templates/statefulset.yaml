@@ -34,13 +34,16 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - --report-hashrate
+            - --syslog
+            - --exit
+            {{- if .Values.extraArgs }}
+            {{- toYaml .Values.extraArgs | nindent 12 }}
+            {{- end }}
           env:
-            - name: WORKER_ID
-              valueFrom:
-                fieldRef:
-                  fieldPath: metadata.name
-            - name: MINE_POOL
-              value: {{ .Values.config.miningPool | quote }}
+            - name: MINING_POOLS
+              value: {{ .Values.miningPools | join " " | quote }}
           ports:
             - name: jsonrpc
               containerPort: 3333

@@ -2,14 +2,21 @@ image:
   repository: ghcr.io/hfuss/miner
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: v0.4.0
+  tag: v0.5.0 # TODO v0.5.0
 
 imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-config:
-  miningPool: us1.ethermine.org
+miningPools:
+    - us1.ethermine.org
+    - us2.ethermine.org
+    - eu1.ethermine.org
+    - asia1.ethermine.org
+
+extraArgs: []
+#   - --eval
+#   - --failover-timeout=1
 
 serviceAccount:
   # Specifies whether a service account should be created

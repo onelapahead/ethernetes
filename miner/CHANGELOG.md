@@ -15,6 +15,15 @@ Inspired from [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 ### Dependencies
 - ...
 
+## [v0.5.0]
+### Added
+- Custom `entrypoint.sh` is copied to the image as `/usr/local/bin/custom-entrypoint.sh` to allow
+  for extra args and `dumb-init`
+
+### Dependencies
+- Latest Ethereum miner [`https://github.com/no-fee-ethereum-mining/nsfminer@v1.3.5`](https://github.com/no-fee-ethereum-mining/nsfminer/releases/tag/v1.3.5)
+
+
 ## [v0.4.0]
 ### Changed
 - Decreasing the final image size using the `base` image rather than
