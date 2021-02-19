@@ -13,15 +13,16 @@ RUN apt-get install -y curl \
     && curl -sL -o ethminer.tgz https://github.com/no-fee-ethereum-mining/nsfminer/releases/download/v1.3.5/nsfminer_1.3.5-ubuntu_18.04-cuda_11.2-opencl.tgz \
     && tar -xzvf ethminer.tgz \
     && mv nsfminer /usr/local/bin/ \
+    && curl -sL https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_amd64.deb -o dumb-init_1.2.5_amd64.deb \
+    && dpkg -i dumb-init_*.deb \
     && rm -rf *
 
 FROM docker.io/nvidia/cuda:11.2.0-base-ubuntu18.04 as final
 
 COPY --from=ethminer /usr/local/bin/nsfminer /usr/local/bin/nsfminer
+COPY --from=ethminer /usr/local/bin/dumb-init /usr/local/bin/dumb-init
 RUN ln -sf /usr/local/bin/nsfminer /usr/local/bin/ethminer
 COPY entrypoint.sh /usr/local/bin/custom-entrypoint.sh
-RUN curl -sL https://github.com/Yelp/dumb-init/releases/download/v1.2.5/dumb-init_1.2.5_amd64.deb -o dumb-init_1.2.5_amd64.deb\
-    && dpkg -i dumb-init_*.deb
 
 # TODO see if these env vars do anything still
 ENV GPU_FORCE_64BIT_PTR=0 \

@@ -39,8 +39,7 @@ jobs:
       - name: build and test
         run: |
           docker build . -t ghcr.io/hfuss/miner:${{ steps.versions.outputs.dirty-version }}
-          docker run -i ghcr.io/hfuss/miner:${{ steps.versions.outputs.dirty-version }} 'nsfminer --help'
-          docker run -i ghcr.io/hfuss/miner:${{ steps.versions.outputs.dirty-version }} 'ethminer --help'
+          docker run --entrypoint /usr/local/bin/nsfminer -i ghcr.io/hfuss/miner:${{ steps.versions.outputs.dirty-version }} '--help'
           docker push ghcr.io/hfuss/miner:${{ steps.versions.outputs.dirty-version }}
         working-directory: miner
 
