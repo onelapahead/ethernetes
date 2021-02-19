@@ -8,8 +8,11 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-config:
-  miningPool: us1.ethermine.org
+miningPools:
+    - us1.ethermine.org
+    - us2.ethermine.org
+    - eu1.ethermine.org
+    - asia1.ethermine.org
 
 extraArgs: []
 #   - --eval

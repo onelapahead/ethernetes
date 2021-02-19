@@ -43,8 +43,8 @@ spec:
             {{- toYaml .Values.extraArgs | nindent 12 }}
             {{- end }}
           env:
-            - name: MINE_POOL
-              value: {{ .Values.config.miningPool | quote }}
+            - name: MINING_POOLS
+              value: {{ .Values.miningPools | join " " | quote }}
           ports:
             - name: jsonrpc
               containerPort: 3333
