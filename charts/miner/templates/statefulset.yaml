@@ -34,6 +34,14 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - --report-hashrate
+            - --nocolor
+            - --syslog
+            - --exit
+            {{- if .Values.extraArgs }}
+            {{- toYaml .Values.extraArgs | nindent 12 }}
+            {{- end }}
           env:
             - name: WORKER_ID
               valueFrom:
