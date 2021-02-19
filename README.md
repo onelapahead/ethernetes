@@ -123,7 +123,7 @@ and operators needed for ingress, storage and logs, TLS, and leveraging GPUs:
 argocd app get bootstrap
 ```
 
-[`gitops/deploy/`](gitops/deploy/) describes the namespaces and manifests for deploying the
+[`gitops/deploy/`](gitops/deploys/) describes the namespaces and manifests for deploying the
 monitoring stack (i.e. DataDog and Elastic), and the deployments of Ethereum miners,
 private blockchain nodes, web apps, and more:
 
@@ -142,7 +142,7 @@ the UI:
 
 ### Elastic
 
-You can see logs from all the miners in the existing cluster [here](https://search.brxblx.io/goto/48ff67e4c824ac8c67314bf8e2293212),
+You can see logs from all the miners in the existing cluster [here](https://search.brxblx.io/goto/48ff67e4c824ac8c67314bf8e2293212):
 
 <p align="center">
   <img src="docs/img/logs-search.png" width="98%" />
