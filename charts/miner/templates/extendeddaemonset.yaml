@@ -76,7 +76,7 @@ spec:
 apiVersion: datadoghq.com/v1alpha1
 kind: ExtendedDaemonsetSetting
 metadata:
-  name: {{ include "miner.fullname" $rootRef }}-{{ .subName }}
+  name: {{ include "miner.fullname" $rootRef }}-{{ .name }}
   labels:
     {{- include "miner.labels" $rootRef  | nindent 4 }}
 spec:
