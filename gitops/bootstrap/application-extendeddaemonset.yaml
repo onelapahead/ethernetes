@@ -1,0 +1,33 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: extendeddaemonset
+spec:
+  destination:
+    name: in-cluster
+    namespace: e8s-system
+  project: default
+  source:
+    repoURL: https://github.com/hfuss/extendeddaemonset
+    path: chart/extendeddaemonset
+    targetRevision: v0.5.0
+    helm:
+      version: v3
+      values: |
+        image:
+          tag: v0.5.0
+
+        clusterScope: true
+
+        resources:
+          requests:
+            cpu: 10m
+            memory: 10Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
