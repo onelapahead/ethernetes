@@ -1,12 +1,13 @@
-{{- if .Values.statefulset.enabled }}
-apiVersion: apps/v1
-kind: StatefulSet
+{{- $rootRef := . }}
+{{- if and .Values.extendeddaemonset.enabled (not .Values.statefulset.enabled) }}
+---
+apiVersion: datadoghq.com/v1alpha1
+kind: ExtendedDaemonSet
 metadata:
   name: {{ include "miner.fullname" . }}
   labels:
     {{- include "miner.labels" . | nindent 4 }}
 spec:
-  replicas: 1
   selector:
     matchLabels:
       {{- include "miner.selectorLabels" . | nindent 6 }}
@@ -70,4 +71,24 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+{{ range .Values.extendeddaemonset.settings }}
+---
+apiVersion: datadoghq.com/v1alpha1
+kind: ExtendedDaemonsetSetting
+metadata:
+  name: {{ include "miner.fullname" $rootRef }}-{{ .subName }}
+  labels:
+    {{- include "miner.labels" $rootRef  | nindent 4 }}
+spec:
+  nodeSelector:
+    {{ toYaml .nodeSelector | nindent 4 }}
+  reference:
+    kind: ExtendedDaemonSet
+    name: {{ include "miner.fullname" $rootRef | quote }}
+  containers:
+    - name: miner
+      resources:
+        limits:
+          nvidia.com/gpu: {{ .gpus }}
+{{- end }}
 {{- end }}
