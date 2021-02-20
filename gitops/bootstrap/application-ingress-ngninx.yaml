@@ -18,6 +18,10 @@ spec:
           reportNodeInternalIp: true
           hostNetwork: true
 
+          # single entrypoint into the cluster for the external-facing VPN and internal load balancer
+          nodeSelector:
+            kubernetes.io/hostname: brx-01a
+
           service:
             enabled: true
             type: ClusterIP

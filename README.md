@@ -64,13 +64,19 @@ git checkout main
 git pull --rebase origin main
 git checkout -b miner-${hostname}
 
-./hack/generate-miner-manifest.sh ${hostname} ${numGPUs} > gitops/deploys/application-${hostname}.yaml
-git add gitops/deploys/application-${hostname}.yaml
+./hack/generate-miner-manifest.sh ${hostname} ${numGPUs} > gitops/deploys/application-miner-${hostname}.yaml
+git add gitops/deploys/application-miner-${hostname}.yaml
 git commit -m "Deploying a New Miner to ${hostname}"
 gh pr create --web --base main
 ```
 
-Once the PR is merged, the miner will be deployed via [ArgoCD](https://cd.brxblx.io/applications/deploys).
+Once the PR is merged, the miner will be deployed via [ArgoCD](https://cd.brxblx.io/applications/deploys):
+
+```bash
+argocd app sync deploys
+argocd app sync miner-${hostname}
+```
+
 
 #### via Helm
 
@@ -123,7 +129,7 @@ and operators needed for ingress, storage and logs, TLS, and leveraging GPUs:
 argocd app get bootstrap
 ```
 
-[`gitops/deploy/`](gitops/deploys/) describes the namespaces and manifests for deploying the
+[`gitops/deploys/`](gitops/deploys/) describes the namespaces and manifests for deploying the
 monitoring stack (i.e. DataDog and Elastic), and the deployments of Ethereum miners,
 private blockchain nodes, web apps, and more:
 
