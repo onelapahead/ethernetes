@@ -12,8 +12,13 @@ spec:
     matchLabels:
       {{- include "miner.selectorLabels" . | nindent 6 }}
   serviceName: {{ include "miner.fullname" . }}
-  updateStrategy:
-    type: RollingUpdate
+  strategy:
+    canary:
+      replicas: 1
+      duration: 3m
+      autoPause:
+        enabled: true
+        maxRestarts: 3
   template:
     metadata:
       {{- with .Values.podAnnotations }}
