@@ -57,3 +57,16 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+statefulset:
+  enabled: true
+
+extendeddaemonset:
+  enabled: false
+
+  # customize the miner daemonset per node(s)
+  settings: []
+#    - name: brx-01a
+#      nodeSelector:
+#        kubernetes.io/hostname: brx-01a
+#      gpus: 2

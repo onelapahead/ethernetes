@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: miner-brx-01a
+  name: miner
 spec:
   destination:
     name: in-cluster
@@ -13,12 +13,16 @@ spec:
     targetRevision: main
     helm:
       values: |
-        nodeSelector:
-          kubernetes.io/hostname: brx-01a
+        statefulset:
+          enabled: false
 
-        resources:
-          limits:
-            nvidia.com/gpu: 2
+        extendeddaemonset:
+          enabled: true
+          settings:
+            - name: brx-01a
+              nodeSelector:
+                kubernetes.io/hostname: brx-01a
+              gpus: 2
   syncPolicy:
     automated:
       selfHeal: true
