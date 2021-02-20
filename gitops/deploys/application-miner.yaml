@@ -23,7 +23,4 @@ spec:
               nodeSelector:
                 kubernetes.io/hostname: brx-01a
               gpus: 2
-  syncPolicy:
-    automated:
-      selfHeal: true
-      prune: true
+  syncPolicy: {}
