@@ -11,10 +11,13 @@ spec:
   selector:
     matchLabels:
       {{- include "miner.selectorLabels" . | nindent 6 }}
-  serviceName: {{ include "miner.fullname" . }}
   strategy:
+    canary:
+      duration: 3m
+      replicas: 1
     rollingUpdate:
-      maxUnavailable: 1
+      maxParallelPodCreation: 1
+      slowStartInterval Duration: 1m
   template:
     metadata:
       {{- with .Values.podAnnotations }}
