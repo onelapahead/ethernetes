@@ -15,7 +15,7 @@ spec:
       version: v3
       values: |
         image:
-          tag: 0.3.0-rc.3
+          tag: latest
 
         clusterScope: false
 
