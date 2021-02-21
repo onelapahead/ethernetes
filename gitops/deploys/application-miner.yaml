@@ -14,14 +14,15 @@ spec:
     helm:
       values: |
         statefulset:
+          enabled: false
+
+        extendeddaemonset:
           enabled: true
-
-        nodeSelector:
-          kubernetes.io/hostname: brx-01a
-
-        resources:
-          limits:
-            nvidia.com/gpu: 2
+          settings:
+            - name: brx-01a
+              nodeSelector:
+                kubernetes.io/hostname: brx-01a
+              gpus: 2
 
   syncPolicy:
     automated:

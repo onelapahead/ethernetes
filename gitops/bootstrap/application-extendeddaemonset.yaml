@@ -5,7 +5,7 @@ metadata:
 spec:
   destination:
     name: in-cluster
-    namespace: e8s-system
+    namespace: ethereum
   project: default
   source:
     repoURL: https://github.com/hfuss/extendeddaemonset
@@ -15,9 +15,9 @@ spec:
       version: v3
       values: |
         image:
-          tag: 0.4.0
+          tag: latest
 
-        clusterScope: true
+        clusterScope: false
 
         resources:
           requests:
