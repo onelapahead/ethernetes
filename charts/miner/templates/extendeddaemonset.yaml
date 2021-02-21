@@ -8,16 +8,13 @@ metadata:
   labels:
     {{- include "miner.labels" . | nindent 4 }}
 spec:
-  selector:
-    matchLabels:
-      {{- include "miner.selectorLabels" . | nindent 6 }}
   strategy:
     canary:
       duration: 3m
       replicas: 1
     rollingUpdate:
       maxParallelPodCreation: 1
-      slowStartInterval Duration: 1m
+      slowStartIntervalDuration: 1m
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -74,24 +71,24 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-{{/*{{ range .Values.extendeddaemonset.settings }}*/}}
-{{/*---*/}}
-{{/*apiVersion: datadoghq.com/v1alpha1*/}}
-{{/*kind: ExtendedDaemonsetSetting*/}}
-{{/*metadata:*/}}
-{{/*  name: {{ include "miner.fullname" $rootRef }}-{{ .name }}*/}}
-{{/*  labels:*/}}
-{{/*    {{- include "miner.labels" $rootRef  | nindent 4 }}*/}}
-{{/*spec:*/}}
-{{/*  nodeSelector:*/}}
-{{/*    {{ toYaml .nodeSelector | nindent 4 }}*/}}
-{{/*  reference:*/}}
-{{/*    kind: ExtendedDaemonSet*/}}
-{{/*    name: {{ include "miner.fullname" $rootRef | quote }}*/}}
-{{/*  containers:*/}}
-{{/*    - name: miner*/}}
-{{/*      resources:*/}}
-{{/*        limits:*/}}
-{{/*          nvidia.com/gpu: {{ .gpus }}*/}}
-{{/*{{- end }}*/}}
+{{ range .Values.extendeddaemonset.settings }}
+---
+apiVersion: datadoghq.com/v1alpha1
+kind: ExtendedDaemonsetSetting
+metadata:
+  name: {{ include "miner.fullname" $rootRef }}-{{ .name }}
+  labels:
+    {{- include "miner.labels" $rootRef  | nindent 4 }}
+spec:
+  nodeSelector:
+    {{ toYaml .nodeSelector | nindent 4 }}
+  reference:
+    kind: ExtendedDaemonSet
+    name: {{ include "miner.fullname" $rootRef | quote }}
+  containers:
+    - name: miner
+      resources:
+        limits:
+          nvidia.com/gpu: {{ .gpus }}
+{{- end }}
 {{- end }}
