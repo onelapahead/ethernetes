@@ -7,6 +7,10 @@ spec:
     name: in-cluster
     namespace: ethereum
   project: default
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
   source:
     repoURL: https://github.com/hfuss/ethernetes
     path: charts/miner
@@ -23,8 +27,3 @@ spec:
               nodeSelector:
                 kubernetes.io/hostname: brx-01a
               gpus: 2
-
-  syncPolicy:
-    automated:
-      selfHeal: true
-      prune: true

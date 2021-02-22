@@ -4,11 +4,10 @@ Learning more about blockchain and deep learning with GPUs and K8s.
 
 * [Getting Started](#getting-started)
   * [Requirements](#requirements)
-  * [Install](#install)
+  * [Cluster Installation and Management](#cluster-installation-and-management)
   * [Deploying a Miner](#deploying-a-miner)
     * [via ArgoCD](#via-argocd)
     * [via Helm](#via-helm)
-* [Adding a New Node](#adding-a-new-node)
 * [Managing Apps via ArgoCD](#managing-apps-via-argocd)
 * [Monitoring](#monitoring)
   * [Elastic](#elastic)
@@ -26,24 +25,41 @@ For more info on specific components, see the [additional docs](docs/README.md).
 - kubectl 1.20+
 - argocd 1.8+
 
-### Install
+### Cluster Installation and Management
 
 Initializing the first node and ArgoCD consists of the following:
 
 ```bash
-ssh $(whoami)@brx-01a 'sudo etherenetes/k3s/install.sh'
-mkdir -p ${HOME}/.k3s/
-ssh -t $(whoami)@brx-01a 'sudo cat /etc/rancher/k3s/k3s.yaml'
+cd k3s/
+./install-server.sh ethernetes.brxblx.io
+
+# check the state of the helm release and apps for ArgoCD
+export KUBECONFIG=${HOME}/.k3s/config.yaml
+helm ls -n e8s-system
+kubectl get pod -n e8s-system
+kubectl get app -n e8s-system
 ```
 
-Copy the output of the final command to a file you can use as your `KUBECONFIG`,
-then from there you can add secrets and manage ArgoCD:
+From there you can add secrets and upgrade ArgoCD to use an Ingress with a TLS cert:
 
 ```bash
-pushd k3s
-./bootstrap.sh
-popd
+./bootstrap-server.sh ethernetes.brxblx.io
 ```
+
+If you need to add a worker node:
+
+```bash
+./add-node.sh my-new-host ethernetes.brxblx.io  
+```
+
+Or to add another control node:
+
+```bash
+./add-node.sh my-new-host ethernetes.brxblx.io --server 
+```
+
+> **Note**: all args after the second positional argument are passed to the `k3sup join` command
+> in case you want to provide additional configuration.
 
 ### Deploying a Miner
 
@@ -56,16 +72,25 @@ hostname=brx-01a
 
 #### via ArgoCD
 
-To deploy a new miner to the existing ethernetes cluster you
-can do so using ArgoCD and GitOps:
+Any time a new host is configured by the [NVIDIA GPU Operator](https://github.com/NVIDIA/gpu-operator),
+a miner using 1 GPU is automatically deployed to the existing ethernetes cluster via
+an [`ExtendedDaemonSet`](https://github.com/datadog/extendeddaemonset).
+To customize the number of GPUs per node you can do so  by appending to the
+`ExtendedDaemonsetSettings` managed using ArgoCD and Helm:
 
 ```bash
 git checkout main
 git pull --rebase origin main
 git checkout -b miner-${hostname}
 
-./hack/generate-miner-manifest.sh ${hostname} ${numGPUs} > gitops/deploys/application-miner-${hostname}.yaml
-git add gitops/deploys/application-miner-${hostname}.yaml
+cat <<EOF >> gitops/deploy/application-miner.yaml
+            - name: ${hostname}
+              nodeSelector:
+                kubernetes.io/hostname: ${hostname}
+              gpus: ${numGPUs}
+EOF
+
+git add gitops/deploys/application-miner.yaml
 git commit -m "Deploying a New Miner to ${hostname}"
 gh pr create --web --base main
 ```
@@ -74,13 +99,15 @@ Once the PR is merged, the miner will be deployed via [ArgoCD](https://cd.brxblx
 
 ```bash
 argocd app sync deploys
-argocd app sync miner-${hostname}
+argocd app sync miner
 ```
 
+> **Note**: This process will ideally be automated by a `MiningSet` controller which auto-discovers
+> the number of GPUs per node (or node selectors) and schedules miners via an `ExtendedDaemonSet`.
 
 #### via Helm
 
-You can deploy to a particular host on your own cluster using Helm:
+You can deploy to a particular host on your own GPU-enabled cluster using Helm and a `StatefulSet`:
 
 ```bash
 kubectl create ns ethereum
@@ -107,10 +134,6 @@ helm upgrade --install ethereum-miner charts/miner \
 
 helm test --logs -n ethereum ethereum-miner
 ```
-
-## Adding a New Node
-
-TODO ...
 
 ## Managing Apps via ArgoCD
 
