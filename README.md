@@ -21,6 +21,7 @@ For more info on specific components, see the [additional docs](docs/README.md).
 
 - Ubuntu 18.04
 - docker 20+
+- k3sup 0.9+
 - helm 3.5+
 - kubectl 1.20+
 - argocd 1.8+
