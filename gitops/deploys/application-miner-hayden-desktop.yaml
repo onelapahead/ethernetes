@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: miner
+  name: miner-hayden-desktop
 spec:
   destination:
     name: in-cluster
@@ -18,16 +18,11 @@ spec:
     helm:
       values: |
         statefulset:
-          enabled: false
-
-        extendeddaemonset:
           enabled: true
-          settings:
-            - name: brx-01a
-              nodeSelector:
-                nvidia.com/gpu.count: '2'
-              gpus: 2
-            - name: hayden-desktop
-              nodeSelector:
-                kubernetes.io/hostname: hayden-desktop
-              gpus: 1
+
+        nodeSelector:
+          kubernetes.io/hostname: 'hayden-desktop'
+
+        resources:
+          limits:
+            nvidia.com/gpu: 1

@@ -84,14 +84,14 @@ git checkout main
 git pull --rebase origin main
 git checkout -b miner-${hostname}
 
-cat <<EOF >> gitops/deploys/application-miner.yaml
+cat <<EOF >> gitops/deploys/application-miner-hayden-desktop.yaml
             - name: ${hostname}
               nodeSelector:
                 kubernetes.io/hostname: ${hostname}
               gpus: ${numGPUs}
 EOF
 
-git add gitops/deploys/application-miner.yaml
+git add gitops/deploys/application-miner-hayden-desktop.yaml
 git commit -m "Deploying a New Miner to ${hostname}"
 gh pr create --web --base main
 ```
