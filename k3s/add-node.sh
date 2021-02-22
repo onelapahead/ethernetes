@@ -5,6 +5,7 @@ shift
 serverHostname="${1:-ethernetes.brxblx.io}"
 shift
 extraArgs="$@"
+ssh -t hayden@${hostname} "sudo mkdir -p /root/.ssh/"
 ssh -t hayden@${hostname} "sudo cp /home/hayden/.ssh/authorized_keys /root/.ssh/"
 
 ssh root@${hostname} <<EOS
@@ -22,15 +23,19 @@ EOF
   update-initramfs -u
 fi
 
-apt install docker.io
+apt install -y docker.io open-iscsi
 EOS
 
-scp config.yaml root@${hostname}:/etc/rancher/k3s/config.yaml
-scp bootstrap/*.yaml root@${hostname}:/var/lib/rancher/k3s/server/manifests/
+if [[ "$extraArgs" == *"--server"* ]]; then
+  scp config.yaml root@${hostname}:/etc/rancher/k3s/config.yaml
+  scp bootstrap/*.yaml root@${hostname}:/var/lib/rancher/k3s/server/manifests/
+fi
 
 k3sup join \
   --host ${hostname} \
   --server-host ${serverHostname} \
   --user root \
   --ssh-key ${HOME}/.ssh/id_ed25519 \
+  --k3s-version v1.20.2+k3s1 \
+  --k3s-extra-args --docker \
   ${extraArgs}

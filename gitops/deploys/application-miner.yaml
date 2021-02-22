@@ -23,7 +23,11 @@ spec:
         extendeddaemonset:
           enabled: true
           settings:
-            - name: 01a
+            - name: brx-01a
               nodeSelector:
                 kubernetes.io/hostname: brx-01a
               gpus: 2
+            - name: hayden-desktop
+              nodeSelector:
+                kubernetes.io/hostname: hayden-desktop
+              gpus: 1

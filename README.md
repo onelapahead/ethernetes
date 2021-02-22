@@ -84,7 +84,7 @@ git checkout main
 git pull --rebase origin main
 git checkout -b miner-${hostname}
 
-cat <<EOF >> gitops/deploy/application-miner.yaml
+cat <<EOF >> gitops/deploys/application-miner.yaml
             - name: ${hostname}
               nodeSelector:
                 kubernetes.io/hostname: ${hostname}
