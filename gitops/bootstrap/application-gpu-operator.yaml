@@ -11,10 +11,9 @@ spec:
     helm:
       version: v3
       values: |
-        driver:
-          repository: ghcr.io/hfuss
-          image: nvidia-driver
-          version: v0.1.0
+        operator:
+          nodeSelector:
+            kubernetes.io/hostname: brx-01a
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: e8s-system
