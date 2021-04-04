@@ -1,28 +1,28 @@
-#apiVersion: argoproj.io/v1alpha1
-#kind: Application
-#metadata:
-#  name: miner-brx-01a
-#spec:
-#  destination:
-#    name: in-cluster
-#    namespace: ethereum
-#  project: default
-#  syncPolicy:
-#    automated:
-#      selfHeal: true
-#      prune: true
-#  source:
-#    repoURL: https://github.com/hfuss/ethernetes
-#    path: charts/miner
-#    targetRevision: main
-#    helm:
-#      values: |
-#        statefulset:
-#          enabled: true
-#
-#        nodeSelector:
-#          kubernetes.io/hostname: 'brx-01a'
-#
-#        resources:
-#          limits:
-#            nvidia.com/gpu: 2
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: miner-brx-01a
+spec:
+  destination:
+    name: in-cluster
+    namespace: ethereum
+  project: default
+  syncPolicy:
+    automated:
+      selfHeal: true
+      prune: true
+  source:
+    repoURL: https://github.com/hfuss/ethernetes
+    path: charts/miner
+    targetRevision: main
+    helm:
+      values: |
+        statefulset:
+          enabled: true
+
+        nodeSelector:
+          kubernetes.io/hostname: 'brx-01a'
+
+        resources:
+          limits:
+            nvidia.com/gpu: 2

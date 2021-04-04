@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 hostname="${1:-ethernetes.brxblx.io}"
 ssh -t hayden@${hostname} "sudo mkdir -p /root/.ssh/"
 ssh -t hayden@${hostname} "sudo cp /home/hayden/.ssh/authorized_keys /root/.ssh/"
@@ -28,11 +30,10 @@ scp install/*.yaml root@${hostname}:/var/lib/rancher/k3s/server/manifests/
 mkdir -p ${HOME}/.k3s/
 touch ${HOME}/.k3s/config.yaml
 k3sup install \
-  --skip-install \
   --host ${hostname} \
   --user root \
   --ssh-key ${HOME}/.ssh/id_ed25519 \
-  --k3s-version v1.20.2+k3s1 \
+  --k3s-version v1.20.5+k3s1 \
   --merge \
   --local-path ${HOME}/.k3s/config.yaml
 
