@@ -1,17 +1,17 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: quorum
-spec:
-  destination:
-    name: in-cluster
-    namespace: ethereum
-  project: default
-  source:
-    repoURL: https://github.com/hfuss/quorum-on-k8s
-    targetRevision: main
-    path: charts/quorum
-    helm:
-      values: |
-        longhornStorageEnabled: true
-  syncPolicy: {}
+#apiVersion: argoproj.io/v1alpha1
+#kind: Application
+#metadata:
+#  name: quorum
+#spec:
+#  destination:
+#    name: in-cluster
+#    namespace: ethereum
+#  project: default
+#  source:
+#    repoURL: https://github.com/hfuss/quorum-on-k8s
+#    targetRevision: main
+#    path: charts/quorum
+#    helm:
+#      values: |
+#        longhornStorageEnabled: true
+#  syncPolicy: {}
