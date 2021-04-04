@@ -25,4 +25,4 @@ spec:
 
         resources:
           limits:
-            nvidia.com/gpu: 1
+            nvidia.com/gpu: 2
