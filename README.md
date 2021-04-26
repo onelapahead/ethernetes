@@ -53,12 +53,6 @@ If you need to add a worker node:
 ./add-node.sh my-new-host ethernetes.brxblx.io  
 ```
 
-Or to add another control node:
-
-```bash
-./add-node.sh my-new-host ethernetes.brxblx.io --server 
-```
-
 > **Note**: all args after the second positional argument are passed to the `k3sup join` command
 > in case you want to provide additional configuration.
 
